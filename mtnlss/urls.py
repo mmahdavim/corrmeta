@@ -5,9 +5,12 @@ import views
 urlpatterns = [
     url(r'^$', views.home),
     url(r'^proj/$', views.proj),
+    url(r'^projslist/$', views.projsList),
+    url(r'^addproj/$', views.addProj),
     url(r'^paper/(?P<paperID>.+)/$', views.paper),
     url(r'^editprojtitle/(?P<projID>.+)/$', views.editProjTitle),
     url(r'^addpaper/(?P<projID>.+)/$', views.addPaper),
+    url(r'^deleteproj/(?P<projID>.+)/$', views.deleteProj),
     url(r'^paperslist/(?P<returnInvalidForm>.+)/(?P<projID>.+)/$', views.papersList),
     url(r'^deletepaper/(?P<paperID>.+)/$', views.deletePaper),
     url(r'^addquestion/(?P<projID>.+)/$', views.addQuestion),

@@ -320,7 +320,7 @@ function saveCorrelations(){
 			alert("No changes were detected in the correlation values. Nothing was altered in the database.");
 		}
 		else{
-			alert("Something went wrong. The correlation values were not saved.");
+			alert("Something went wrong. Please make sure the values you have entered are valid.");
 		}
 	});
 }

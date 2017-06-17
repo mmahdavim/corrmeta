@@ -8,7 +8,7 @@ class Project(models.Model):
     title = models.CharField(max_length=140)
     admins = models.ManyToManyField(User)
     class Meta:
-        ordering = ('title',)
+        ordering = ('id',)
     def getPapersSummary(self):
         result = ""
         counter = 0

@@ -1,4 +1,12 @@
 {% extends 'mtnlss/base.html' %}
+
+{% block include_js %}
+{% load static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/home.js' %}" ></script>
+{% endblock %}
+
+
 {% block title %}Home{% endblock %}
 
 {% block content %}
@@ -6,16 +14,18 @@
 		<div class='topRibbon'>Projects
 		</div>
 		<div id='projsBoxInside'>
-			<table class= "projsTable">
-			<th> <td><b>Papers</b></td> <td><b>Variables</b></td> </th>
-			{% for proj in projs %}
-			<tr class="{% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}">
-				<td><a href="/mtnlss/proj?id={{proj.id}}">{{proj.title}}</a></td>
-				<td>{{proj.paper_set.count}}<div class="sampleItems">{{proj.getPapersSummary}}</div></td>
-				<td>{{proj.variable_set.count}}</td>
-			</tr>
-			{% endfor %}
-			</table>
+			<div id='projsTableContainer'>
+				<!-- JS code brings the code from ProjList here -->
+			</div>
+			
+			<div class="addProjDiv">
+			<form action="/whatever/" method="POST" id="addProjForm">
+		    	{% csrf_token %}
+				<div class='newProjLabel' style='float:left; margin-left: 10px;'>{{ newProjForm.title }}</div>
+				<input id='addNewProjButton' type="submit" value="Add project" />
+			</form>
+			</div>
+			
 		</div>
 	</div>
 {% endblock %}

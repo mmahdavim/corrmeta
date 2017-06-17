@@ -10,8 +10,8 @@ import math
 
 
 def home(request):
-    allProjs = Project.objects.all()
-    return render(request, 'mtnlss/home.html',{'projs':allProjs})
+    newProjForm = ProjectForm()
+    return render(request, 'mtnlss/home.html',{'newProjForm':newProjForm})
 
 def proj(request):
     #called when the proj page is loaded
@@ -25,6 +25,22 @@ def proj(request):
         form = ProjectForm()
         
     return render(request, 'mtnlss/proj.html', {'form': form,'newPaperForm':newPaperform})
+
+def addProj(request):
+    form = ProjectForm(request.POST)
+    
+    if form.is_valid():
+        data = form.cleaned_data
+        title = data['title']
+        theProj = Project(title=title)
+        theProj.save()
+        return HttpResponse("Done")
+    else:
+        return HttpResponse("Error")
+
+def projsList(request):
+    allProjs = Project.objects.all()
+    return render(request, 'mtnlss/projsList.html',{'projs':allProjs})
 
 def editProjTitle(request,projID):
     theProj = Project.objects.get(pk=projID)
@@ -64,6 +80,13 @@ def papersList(request, returnInvalidForm, projID):
 def deletePaper(request,paperID):
     try:
         Paper.objects.filter(id=paperID).delete()
+        return HttpResponse("Done")
+    except:
+        return HttpResponse("Error")
+
+def deleteProj(request,projID):
+    try:
+        Project.objects.filter(id=projID).delete()
         return HttpResponse("Done")
     except:
         return HttpResponse("Error")
@@ -160,50 +183,53 @@ def getHiddenDivs(request,paperID):
     return HttpResponse(corsCode+varsCode)
     
 def saveCorrelations(request,paperID):
-    p = Paper.objects.get(pk=paperID)
-    corsInDB = Correlation.objects.filter(paper=p)
-    updatedSomething = False
-    handledKeys = {}
-    #Iterate through the Correlation objects for this paper, for each one find the new value we just got from the user, and update it.
-    for c in corsInDB:
-        key1 = str(c.var1.id)+"_"+str(c.var2.id)
-        key2 = str(c.var2.id)+"_"+str(c.var1.id)
-        theKey = None
-        if key1 in request.POST:
-            theKey = key1
-        elif key2 in request.POST:
-            theKey = key2
-        else:
-            continue
-        handledKeys.update({theKey:""})
-        newCorValue = request.POST[theKey]
-        if newCorValue=="":
-            c.delete()
-            updatedSomething = True
-            continue
-        try:
-            newCorValue = Decimal(newCorValue)
-            if(c.value != newCorValue):
-                c.value = newCorValue
-                c.save()
+    try:
+        p = Paper.objects.get(pk=paperID)
+        corsInDB = Correlation.objects.filter(paper=p)
+        updatedSomething = False
+        handledKeys = {}
+        #Iterate through the Correlation objects for this paper, for each one find the new value we just got from the user, and update it.
+        for c in corsInDB:
+            key1 = str(c.var1.id)+"_"+str(c.var2.id)
+            key2 = str(c.var2.id)+"_"+str(c.var1.id)
+            theKey = None
+            if key1 in request.POST:
+                theKey = key1
+            elif key2 in request.POST:
+                theKey = key2
+            else:
+                continue
+            handledKeys.update({theKey:""})
+            newCorValue = request.POST[theKey]
+            if newCorValue=="":
+                c.delete()
                 updatedSomething = True
-        except: 
-            return HttpResponse("Error")
-    #Now look for correlations that are being added for the first time and therefore don't have a Correlation object in the DB
-    for k in request.POST:
-        if not k in handledKeys:
-            updatedSomething = True
-            newVal = request.POST[k]
-            [varid1,varid2] = k.split("_")
-            v1 = Variable.objects.get(pk=varid1)
-            v2 = Variable.objects.get(pk=varid2)
-            newC = Correlation(paper=p,value=newVal,var1=v1,var2=v2)
-            newC.save()
-    
-    if updatedSomething:
-        return HttpResponse("Done")
-    else:
-        return HttpResponse("nochange")
+                continue
+            try:
+                newCorValue = Decimal(newCorValue)
+                if(c.value != newCorValue):
+                    c.value = newCorValue
+                    c.save()
+                    updatedSomething = True
+            except: 
+                return HttpResponse("Error")
+        #Now look for correlations that are being added for the first time and therefore don't have a Correlation object in the DB
+        for k in request.POST:
+            if not k in handledKeys:
+                updatedSomething = True
+                newVal = request.POST[k]
+                [varid1,varid2] = k.split("_")
+                v1 = Variable.objects.get(pk=varid1)
+                v2 = Variable.objects.get(pk=varid2)
+                newC = Correlation(paper=p,value=newVal,var1=v1,var2=v2)
+                newC.save()
+        
+        if updatedSomething:
+            return HttpResponse("Done")
+        else:
+            return HttpResponse("nochange")
+    except:
+        return HttpResponse("Error")
         
 def editPaper(request,paperID):
     existingData = Paper.objects.filter(id=paperID).values()[0]

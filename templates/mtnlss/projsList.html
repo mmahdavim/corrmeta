@@ -1,0 +1,14 @@
+{% load static %}
+
+
+<table class= "projsTable">
+<th> <td><b>Papers</b></td> <td><b>Variables</b></td> </th>
+	{% for proj in projs %}
+	<tr class="{% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}">
+		<td style='width:130px'><a href="/mtnlss/proj?id={{proj.id}}">{{proj.title}}</a></td>
+		<td>{{proj.paper_set.count}}<div class="sampleItems">{{proj.getPapersSummary}}</div></td>
+		<td style='width:120px'>{{proj.variable_set.count}}</td>
+		<td class='deleteProjTD' style='width:10px' title='Delete project' onClick='deleteProj({{proj.id}})'><img src='{% static 'images/delete.ico' %}' style="width:15px;"></img></td>
+	</tr>
+	{% endfor %}
+</table>
