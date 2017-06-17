@@ -137,7 +137,7 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     h_siglev = norm.ppf(1-(1-h_sig1)/2)
     print(h_siglev)
     h_credsig =  norm.ppf(1-(1-h_sig2)/2)
-    h_FSN = h_K * (h_Zc/h_siglev - 1)
+    h_FSN = h_K * ((h_Zc/h_siglev)**2 - 1)
     h_rmean = float(h_rmean/h_N)
     h_rcmean = float(h_rcmean/h_N)
     h_sigmar2_toAdd = [ float(x['sample_size'])*(float(x['correlation'])-h_rmean)**2 for x in pairs ]
