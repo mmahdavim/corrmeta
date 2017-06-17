@@ -3,6 +3,7 @@ from decimal import *
 from django.db.models import Max
 from itertools import chain
 import math
+from scipy.stats import norm
 
 def addExistingVariableToDB(varID,paperID):
     p = Paper.objects.get(pk=paperID)
@@ -52,20 +53,20 @@ def getCorsDivCode(paperID):
     corsHiddenCode += "\n</div>\n"
     return corsHiddenCode
 
-def norm_s_inv(p):  
-    """Calculates the inverse of the standard normal distribution."""
-
-    # Probability must be between 0 and 1
-    if p < 0 or p > 1:
-        return 0.00
-
-    a = [-39.96968, 220.96609, -275.92851, 138.35775, -30.66479, 2.50662]
-    b = [-54.47609, 161.58583, -155.69897, 66.801311, -13.28068]
-
-    q = p - 0.5
-    r = q * q
-
-    return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
+# def norm_s_inv(p):  
+#     """Calculates the inverse of the standard normal distribution."""
+# 
+#     # Probability must be between 0 and 1
+#     if p < 0 or p > 1:
+#         return 0.00
+# 
+#     a = [-39.96968, 220.96609, -275.92851, 138.35775, -30.66479, 2.50662]
+#     b = [-54.47609, 161.58583, -155.69897, 66.801311, -13.28068]
+# 
+#     q = p - 0.5
+#     r = q * q
+# 
+#     return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
 
 def getAnalysisResults(theProj, group1varids, group2varids):
     pairs = []
@@ -133,9 +134,9 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     h_ZZ = h_AveZ/h_SEZes
     h_rfisherfixed = (math.exp(2*h_AveZ)-1) / (math.exp(2*h_AveZ)+1)
     h_Zc = h_sum_Z/math.sqrt(h_K)
-    h_siglev = norm_s_inv(1-(1-h_sig1)/2)
+    h_siglev = norm.ppf(1-(1-h_sig1)/2)
     print(h_siglev)
-    h_credsig =  norm_s_inv(1-(1/h_sig2)/2)
+    h_credsig =  norm.ppf(1-(1/h_sig2)/2)
     h_FSN = h_K * (h_Zc/h_siglev - 1)
     h_rmean = float(h_rmean/h_N)
     h_rcmean = float(h_rcmean/h_N)
@@ -200,7 +201,7 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     results['FSN'] =  h_FSN
     results['Q'] =  h_Q
     results['dr'] =  h_dr
-    results['l2'] =  h_l2
+    results['l2'] =  h_l2*100
     results['rmean'] =  h_rmean
     results['sigmar2'] =  h_sigmar2
     results['SDr'] =  h_SDr

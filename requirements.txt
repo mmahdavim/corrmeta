@@ -26,6 +26,7 @@ sox==1.2.8
 spectra==0.0.7
 SQLAlchemy==1.0.15
 stevedore==1.13.0
+scipy==0.17.0
 uritemplate==0.6
 virtualenv==15.1.0
 virtualenv-clone==0.2.6
