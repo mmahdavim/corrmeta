@@ -133,7 +133,8 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     h_ZZ = h_AveZ/h_SEZes
     h_rfisherfixed = (math.exp(2*h_AveZ)-1) / (math.exp(2*h_AveZ)+1)
     h_Zc = h_sum_Z/math.sqrt(h_K)
-    h_siglev = norm_s_inv(1-(1/h_sig1)/2)
+    h_siglev = norm_s_inv(1-(1-h_sig1)/2)
+    print(h_siglev)
     h_credsig =  norm_s_inv(1-(1/h_sig2)/2)
     h_FSN = h_K * (h_Zc/h_siglev - 1)
     h_rmean = float(h_rmean/h_N)
@@ -154,7 +155,7 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     h_cr_high_r = h_rmean + h_credsig*h_sigmap
     h_var_rc_toAdd =  [ float(x['h_W'])*((float(x['h_AR'])-h_rcmean)**2) for x in pairs ]
     h_var_rc = sum(h_var_rc_toAdd)/h_sum_W
-    h_AveVe_toAdd = [ float(x['h_W'])*( ((1-h_rmean**2)**2/float(x['sample_size'])-1)/(float(x['h_A'])**2) ) for x in pairs ]
+    h_AveVe_toAdd = [ float(x['h_W'])*( ((1-h_rmean**2)**2/(float(x['sample_size'])-1)) /(float(x['h_A'])**2) ) for x in pairs ]
     h_AveVe = sum(h_AveVe_toAdd)/h_sum_W
     h_Varp = h_var_rc - h_AveVe
     if h_Varp <0:
@@ -231,8 +232,8 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     results['cl_ES_low'] =  h_cl_ES_low
     results['cl_ES_high'] =  h_cl_ES_high
     results['RE_AveZ'] =  h_RE_AveZ
-    results['RESEz'] =  h_RESEz
-    results['fisherrandom'] =  h_fisherrandom
+    results['RE_SEz'] =  h_RESEz
+    results['rfisherrandom'] =  h_fisherrandom
     results['T2'] =  h_T2
     results['RE_cl_ES_low'] =  h_RE_cl_ES_low
     results['RE_cl_ES_high'] =  h_RE_cl_ES_high

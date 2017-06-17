@@ -37,7 +37,7 @@
 	border: solid 1px gray;
 	border-left: 0px;
 	width: 120px;
-	overflow: scroll;
+	overflow: auto;
 	height: 18px;
 	white-space: nowrap;
 }
