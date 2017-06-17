@@ -1,0 +1,47 @@
+{% load static %}
+<div class='topRibbon'>Correlations</div>
+<div class='headerDiv'>
+		<div  class='' style='width: 220px; display:inline-block;float:left;'>&nbsp;
+		</div>
+	{% for i in varCount %}
+		<div  class='corTableHeaderCell' id='firstRow_{{forloop.counter}}'>
+		</div>
+	{% endfor %}
+	&nbsp;&nbsp;&nbsp;&nbsp;<br><br><br>
+	<div id='ghostSecondRow'>&nbsp;</div>
+</div>
+{% for i in varCount %}
+	<div class='rowDiv'>
+		<div id='rowDeleteButton_{{forloop.counter}}' class='corTableCell rowButton rowDeleteButton' onClick='removeVariableClicked({{forloop.counter}})'><img src='{% static 'images/delete.ico' %}' width='10px'/></div>
+		<div id='rowDownButton_{{forloop.counter}}' class='corTableCell rowButton rowDownButton {% if varsLen == forloop.counter %}disabledRowButton{% endif %}' {% if varsLen != forloop.counter %}onClick='moveRow({{forloop.counter}},1)'{% endif %} ><img src='{% static 'images/down.png' %}' width='15px'/></div>
+		<div id='rowUpButton_{{forloop.counter}}' class='corTableCell rowButton rowUpButton {% if 1 == forloop.counter %}disabledRowButton{% endif %}' {% if 1 != forloop.counter %}onClick='moveRow({{forloop.counter}},-1)'{% endif %} ><img src='{% static 'images/up.png' %}' width='15px'/></div>
+		<div  class='corTableCell corTableCellFirstCol' id='firstCol_{{forloop.counter}}'>
+		</div>
+		{% for j in varCount %}
+			<div class='corTableCell' id='cell_{{forloop.parentloop.counter}}_{{forloop.counter}}'></div>
+		{% endfor %}	
+	</div>
+{% endfor %}
+<div class='rowDiv' id='lastRow'>
+	<div  class='corTableCell corTableCellFirstCol' style='min-width: 223px; max-width: 223px; -background-color: yellow;'></div>
+	{% for i in varCount %}
+		<div class='corTableCell lastRowCell'>{{forloop.counter}}</div>
+	{% endfor %}
+</div>
+<div id='ghostSecondToLastRow'></div>
+<div id='dropdownContainer'>
+	<select id='dropdown' onchange='dropdownChanged()'>
+		<option value="_blank_"></option>
+		<option value="createnew">(Create New...)</option>
+		{% for v in otherProjVars %}
+			<option value="{{v.id}}">{{v.name}}</option>
+	 	{% endfor %}
+	</select>
+	<input id='saveNewVarButton' type='button' value='Add Variable' onClick='addVariableClicked()'></input>
+	<input id='saveTableButton' type='button' value='Save Correlations' onClick='saveCorrelations()'></input>
+	<br>
+	<form id='newVarForm' action="" method="post">
+		{% csrf_token %}
+		{{varForm}}
+	</form>
+</div>

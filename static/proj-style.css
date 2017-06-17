@@ -1,0 +1,188 @@
+/* proj */
+
+.projLabel input{
+	font-size: 48px;
+	font-weight: bold;
+	color: #a44;
+	border-width: 0px;
+}
+#id_proj-title:disabled{
+	background-color: white;
+}
+.varLabel{
+	background-color: #eee;
+	color: 111;
+	-min-width: 40px;
+	-max-width: 80px;
+	padding: 4px;
+	font-size: 12px;
+	border: 2px white solid;
+	float: left;
+	margin-bottom: 2px;
+	margin-right: 2px;
+}
+.varLabel:hover{
+	background-color: #ccc;
+}
+.selectedVarLabel{
+	background-color: #aaa;
+	color: 111;
+	-min-width: 40px;
+	-max-width: 80px;
+	padding: 4px;
+	font-size: 12px;
+	border: 2px white solid;
+	float: left;
+	margin-bottom: 2px;
+	margin-right: 2px;
+}
+.selectedVarLabel:hover{
+	background-color: #aaa;
+}
+#variableBox{
+	padding-top: 0px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	width: 605px;
+	display: inline-block;
+	margin-left: 20px;
+}
+#questionsListBox{
+	float: left;
+}
+#projPageTopContainer{
+	width: 1000px;
+	overflow: auto;
+}
+#papersListBox{
+	border: 1px #a11 solid;
+	border-radius: 0.3em;
+	margin-bottom: 50px;
+}
+.boxHeader{
+	margin-bottom: 5px;
+	background-color: #811;
+	padding: 4px;
+	color: white
+}
+.showHideButton{
+	padding-left: 4px;
+	font-size: 12px;
+	color: #fee;
+	vertical-align: 1
+}
+.tableHeader{
+	font-weight: bold;
+	padding: 6px;
+}
+.tableHeader div{
+	display: inline-block;
+	width: 160px;
+}
+.paperRow{
+	margin-bottom: 1px;
+	border-bottom: dashed 1px grey;
+	padding: 6px;
+}
+.paperRow div{
+	display: inline-block;
+	width: 160px;
+}
+.newPaperFormDiv{
+	font-weight: normal;
+	padding-left: 3px;
+	height: 30px;
+}
+.paperDeleteDiv{
+	cursor: pointer;
+}
+.questionRow{
+	margin-bottom: 3px;
+	padding: 5px 10px 5px 10px;
+	width: 330px;
+	background-color: #ddd;
+	border-radius: 0.3em;
+}
+.questionRow div{
+	display: inline-block;
+	width: 160px;
+}
+.newQuestionFormDiv{
+	font-weight: normal;
+	padding-left: 3px;
+	height: 30px;
+	margin-bottom: 15px;
+}
+.questionDeleteDiv{
+	cursor: pointer;
+}
+.questionsListLabel{
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+.editProjTitleLabel{
+	font-size: 14.5px;
+	color: gray;
+	float: left;
+	margin-right: 4px;
+	margin-top: 3px;
+	cursor: pointer;
+}
+.editProjTitleLabel input{
+	overflow: visible;
+}
+#saveProjTitleChangeButton{
+	-visibility: hidden;
+}
+#darkLayer{
+	height: 100%;
+	width: 100%;
+	background-color: black;
+	opacity: 0.8;
+	float: left;
+	z-index: 2;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+#paperPopup{
+	position: fixed;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	z-index: 3;
+}
+#extraQuestionsBox{
+	width: 370px;
+	margin-bottom: 10px;
+}
+.varEditButton{
+	cursor: pointer;
+}
+.varLabeltf:disabled{
+	border: 0px;
+	padding: 0px;
+	background-color: rgba(0,0,0,  0);
+}
+.varLabeltf{
+	border: 0px;
+	padding: 0px;
+}
+#varsScrollBox{
+	overflow: scroll;
+	height: 240px;
+}
+#analyzeButton{
+	-color: #b22;
+	padding: 4px;
+	margin-top: 30px;
+	float: right;
+	font-weight: bold;
+	font-size: 20px;
+	-cursor: pointer;
+	text-decoration: underline;
+}
+
+
+
+

@@ -1,0 +1,97 @@
+body{
+	font-family: Calibri, Arial;
+}
+
+a{
+	text-decoration: none;
+	color: #d33;
+}
+a:visited{
+	color: #b11;
+}
+a:hover{
+	text-decoration: underline;
+}
+
+.boxOuter{
+	border: 1px solid #811;
+	border-radius: 0.3em;
+	margin-bottom: 20px;
+}
+.boxInner{
+	padding: 15px;
+	padding-top: 0px;
+	overflow: scroll;
+	display: block;
+}
+
+.headerBar{
+	background-color: #bbb;
+	color: white;
+	padding: 4px;
+	width: 100%;
+}
+.contentDiv{
+	width: 1000px;
+	margin: 0 auto;
+	margin-top: 20px
+}
+.numberLabel{
+	color: #fcc;
+}
+.errorField input{
+	border: 1px solid red;
+}
+
+/* home */
+
+.projsTable{
+	margin: 0 auto;
+	cell-padding: 10px;
+}
+.projsTable td{
+	padding: 5px;
+	vertical-align: top;
+	min-width: 200px;
+}
+.sampleItems{
+	font-size: 10px;
+	color: gray;
+}
+.oddRow{
+	background-color: #eee;
+}
+.evenRow{
+	background-color: white;
+}
+.topRibbon{
+	background-color: #d46;
+	color: white;
+	text-align: left;
+	font-size: 24px;
+	font-weight: bold;
+	padding: 10px;
+	margin-bottom: 12px;
+}
+#projsBox{
+	width: 700px;
+	border: 1px solid #811;
+	border-radius: 0.3em;
+	margin: 0 auto;
+}
+#projsBoxInside{
+	padding: 20px;
+}
+#waitingImage{
+	z-index: 4;
+	position: fixed;
+	right: 0;
+	left: 0;
+	margin: auto;
+	top: 200px;	
+	height: 35px;
+	width: 20px;
+	font-size: 10px;
+	color: grey;
+}
+

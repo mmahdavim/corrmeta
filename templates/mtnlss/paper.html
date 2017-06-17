@@ -1,0 +1,51 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/paper.js' %}" ></script>
+<link rel="stylesheet" type="text/css" href="{% static 'paper-style.css' %}" />
+<div id='paperFrame'>
+	
+	<div id='paperTitle'>{{ form.instance.title }}</div>
+	
+	<div id='corTable' class='boxOuter'>
+		<!-- code created in coreTable.html will be injected here using JavaScript -->
+	</div>
+	
+	
+	<div id='topBoxesContainer'>
+		<div id='paperForm' class='boxOuter'>
+		<div class='topRibbon'>Paper Information</div>
+			<div id='paperFormInside' class='boxInner'>
+			<form id='editPaperForm' action="" method="post">
+			    {% csrf_token %}
+			    <table>
+			    {{ form.as_table }}
+			    </table>
+			    <input style='float:left;' type="submit" value="Save Changes" />
+			</form>
+			</div>
+		</div>
+		
+		<div id='extQuesAnswersBox' class='boxOuter'>
+			<div class='topRibbon'>Moderator variables</div>
+			<div id='extQuesAnswersBoxInside' class='boxInner'>
+				<form id='editAnswersForm' action="" method="post">
+					{% csrf_token %}
+					{{answersForm.as_p}}
+					<input type="submit" value="Save Changes" />
+				</form>
+			</div>
+		</div>
+	</div>
+	<br>
+	
+	
+	<div id='hiddenCode' style='visibility:hidden'>
+		{% autoescape off %}
+		{{ hiddenCode }}
+		{% endautoescape %}
+	</div>
+	
+	<div style='visibility:hidden; float: left' id='paperID'>{{form.instance.id}}</div>
+	
+</div>

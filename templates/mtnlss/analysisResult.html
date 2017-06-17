@@ -1,0 +1,347 @@
+{% extends 'mtnlss/base.html' %}
+
+{% block include_js %}
+{% load static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/analysis.js' %}" ></script>
+<link rel="stylesheet" type="text/css" href="{% static 'analysis-style.css' %}" />
+{% endblock %}
+
+{% block title %}Analysis{% endblock %}
+
+
+
+{% block content %}
+	<div id='sidebar' class='boxOuter'>
+		<div class='topRibbon'>Variable Pairs
+		</div>
+		<div id='sidebarInside' class='boxInner'>
+		<div class='pairRow' id='pairRowHeader'>
+			<span class='studyNumber sidebarItem'>Paper</span>
+			<span class='sidebarItem var1'>Variable 1</span>
+			<span class='sidebarItem var2'>Variable 2</span>
+			<span class='sampleSize sidebarItem'>Sample</span>
+			<span class='corValue sidebarItem'>Cor.</span>
+		</div>
+		{% for p in pairs %}
+			<div class='pairRow'>
+				<span class='studyNumber sidebarItem'>{{p.paper_id}}</span>
+				<span class='sidebarItem var1'>{{p.var1}}</span>
+				<span class='sidebarItem var2'>{{p.var2}}</span>
+				<span class='sampleSize sidebarItem'>{{p.sample_size}}</span>
+				<span class='corValue sidebarItem'>{{p.correlation}}</span>
+			</div>
+		{% endfor %}
+		</div>
+	</div>
+	
+	<div id='mainResultBox' class='boxOuter'>
+		<div class='topRibbon'>Results
+		</div>
+		<div id='mainResultBoxInside' class='boxInner'>
+			<div class='resItem'>
+				<div class='resLabel'>Number of correlations:</div>
+				<div class='resValue'>{{results.K|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Aggregate sample size:</div>
+				<div class='resValue'>{{results.N|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Average sample size:</div>
+				<div class='resValue'>{{results.average|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Number of correlations:</div>
+				<div class='resValue'>{{results.K|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>Publication bias</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Failsafe N:</div>
+				<div class='resValue'>{{results.FSN|floatformat:-2|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>Heterogeneity among effect sizes</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Hedges Q test of homogeneity:</div>
+				<div class='resValue'>{{results.Q|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Degrees of freedom:</div>
+				<div class='resValue'>{{results.dr|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>Magnitude of heterogeneity</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>l^2 index:</div>
+				<div class='resValue'>{{results.l2|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resTitle'>Random-Effects Model, <b>Un-Adjusted</b>  for reliability and other artefacts, Based on Schmidt & Hunter (2015)</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Mean Effect Size (r), un-adjusted:</div>
+				<div class='resValue'>{{results.rmean|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>Variances and errors</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Frequency-weighted average squared error (ơr^2):</div>
+				<div class='resValue'>{{results.sigmar2|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Frequency-weighted Standard dev. (SDr):</div>
+				<div class='resValue'>{{results.SDr|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Standard error of mean r (SEr):</div>
+				<div class='resValue'>{{results.SEr|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Sampling Error Variance (estimate):</div>
+				<div class='resValue'>{{results.sigmae2|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Residual Variance (variance of population):</div>
+				<div class='resValue'>{{results.sigmap2|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Residual S.D.	:</div>
+				<div class='resValue'>{{results.sigmap|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Percentage explained (by sampling error):</div>
+				<div class='resValue'>{{results.percExp|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>SIG1% Confidence Interval</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Lower bound:</div>
+				<div class='resValue'>{{results.cl_low_r|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Upper bound:</div>
+				<div class='resValue'>{{results.cl_high_r|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>SIG1% Confidence Interval</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Lower bound:</div>
+				<div class='resValue'>{{results.cr_low_r|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Upper bound:</div>
+				<div class='resValue'>{{results.cr_high_r|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resTitle'>Random-Effects Model, <b>Adjusted</b>  for reliability and other artefacts, Based on Schmidt & Hunter (2015)</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Mean Effect Size (r) , un-adjusted:</div>
+				<div class='resValue'>{{results.rcmean|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>Variances and errors</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Var(rc):</div>
+				<div class='resValue'>{{results.var_rc|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Ave(ve):</div>
+				<div class='resValue'>{{results.AveVe|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Var(ρ):</div>
+				<div class='resValue'>{{results.Varp|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>SDρ:</div>
+				<div class='resValue'>{{results.SDp|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Frequency-weighted Standard dev. (SDr):</div>
+				<div class='resValue'>{{results.SDrc|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Standard error of mean r (for confidence intervals) (SEr):</div>
+				<div class='resValue'>{{results.SErc|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>SIG1% Confidence Interval</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Lower bound:</div>
+				<div class='resValue'>{{results.cl_low_rc|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Upper bound:</div>
+				<div class='resValue'>{{results.cl_high_rc|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>SIG2% Credibility Interval</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Lower bound:</div>
+				<div class='resValue'>{{results.cr_low_rc|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Upper bound:</div>
+				<div class='resValue'>{{results.cr_high_rc|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resTitle'>Calculations using Fisher's Z transformation, <b>Fixed-Effects</b> Model, Adjusted  for reliability and other artefacts</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Average weighted effect size, Fisher's Z:</div>
+				<div class='resValue'>{{results.AveZ|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Standard Error (Z):</div>
+				<div class='resValue'>{{results.SEZes|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Mean Effect Size (r) , un-adjusted:</div>
+				<div class='resValue'>{{results.rfisherfixed|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>Heterogeneity among effect sizes</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Hedges Q test of homogeneity:</div>
+				<div class='resValue'>{{results.Q|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Degrees of freedom:</div>
+				<div class='resValue'>{{results.dr|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>Magnitude of heterogeneity</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>l^2 index:</div>
+				<div class='resValue'>{{results.l2|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>SIG1% Confidence Interval of mean effect size</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Lower bound:</div>
+				<div class='resValue'>{{results.Fisher_cl_low|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Upper bound:</div>
+				<div class='resValue'>{{results.Fisher_cl_high|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>SIG1%  Confidence Interval, Fisher's Z</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Lower bound:</div>
+				<div class='resValue'>{{results.cl_ES_low|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Upper bound:</div>
+				<div class='resValue'>{{results.cl_ES_high|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resTitle'>Calculations using Fisher's Z transformation, Random-Effects Model, Adjusted  for reliability and other artefacts</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Average weighted effect size, Fisher's Z:</div>
+				<div class='resValue'>{{results.RE_AveZ|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Standard Error (Z)	:</div>
+				<div class='resValue'>{{results.RE_SEz|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Mean Effect Size (r) , un-adjusted:</div>
+				<div class='resValue'>{{results.rfisherrandom|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>Heterogeneity among effect sizes</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Hedges Q test of homogeneity:</div>
+				<div class='resValue'>{{results.Q|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Degrees of freedom:</div>
+				<div class='resValue'>{{results.dr|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>l^2 index (magnitude of heterogeneity):</div>
+				<div class='resValue'>{{results.l2|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Population Variability in Effect Sizes:</div>
+				<div class='resValue'>{{results.T2|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>SIG1% Confidence Interval of mean effect size</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Lower bound:</div>
+				<div class='resValue'>{{results.RE_cl_ES_low|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Upper bound:</div>
+				<div class='resValue'>{{results.RE_cl_ES_high|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resSubtitle'>SIG1%  Confidence Interval, Fisher's Z</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Lower bound:</div>
+				<div class='resValue'>{{results.RE_Fisher_cl_low|floatformat:-2}}</div>
+			</div>
+			
+			<div class='resItem'>
+				<div class='resLabel'>Upper bound:</div>
+				<div class='resValue'>{{results.RE_Fisher_cl_high|floatformat:-2}}</div>
+			</div>
+			
+		</div>
+	</div>
+{% endblock %}
+

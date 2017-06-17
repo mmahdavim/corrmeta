@@ -1,0 +1,22 @@
+{% extends 'mtnlss/base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+	<div id='projsBox'>
+		<div class='topRibbon'>Projects
+		</div>
+		<div id='projsBoxInside'>
+			<table class= "projsTable">
+			<th> <td><b>Papers</b></td> <td><b>Variables</b></td> </th>
+			{% for proj in projs %}
+			<tr class="{% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}">
+				<td><a href="/mtnlss/proj?id={{proj.id}}">{{proj.title}}</a></td>
+				<td>{{proj.paper_set.count}}<div class="sampleItems">{{proj.getPapersSummary}}</div></td>
+				<td>{{proj.variable_set.count}}</td>
+			</tr>
+			{% endfor %}
+			</table>
+		</div>
+	</div>
+{% endblock %}
+

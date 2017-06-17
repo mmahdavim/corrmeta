@@ -1,0 +1,90 @@
+.chooseAnalVarSelect{
+	width: 180px;
+}
+#analFPTable{
+	margin: 0 auto;
+	border-spacing: 140px 10px;
+}
+.analFPDropdown{
+	width: 180px;
+	margin-top: 10px;
+}
+#finalAnalyzeButtonContainer{
+	margin: 0 auto;
+	text-align: center;
+	margin-top: 20px;
+}
+#userGuide{
+	margin: 0 auto; width: 800px; margin-bottom: 30px;
+}
+#sidebar{
+	width: 448px;
+	float:left;
+	margin-left:-50px;
+}
+#mainResultBox{
+	width: 630px;
+	float: right;
+	margin-right:-50px;
+}
+#sidebarInside{
+	height: 620px;
+	overflow: scroll;
+}
+.sidebarItem{
+	float: left;
+	padding: 5px;
+	border: solid 1px gray;
+	border-left: 0px;
+	width: 120px;
+	overflow: scroll;
+	height: 18px;
+	white-space: nowrap;
+}
+.studyNumber{
+	width: 37px;
+	border-left: 1px solid gray;
+}
+.sampleSize{
+	width: 48px;
+}
+.corValue{
+	width: 35px;
+}
+.pairRow{
+	margin-bottom: 2px;
+	-border: 1px yellow solid;
+	overflow: auto;
+}
+#pairRowHeader span{
+	font-weight: bold;
+}
+.resLabel{
+	float: left;
+	width: 300px;
+}
+.resValue{
+	float: left;
+	margin-left: 20px;
+	color: gray;
+	-font-weight: bold;
+}
+.resItem{
+	overflow: auto;
+	margin-bottom: 5px;
+}
+.resTitle{
+	text-align: center;
+	font-weight: bold;
+	background-color: #aaa;
+	color: white;
+	-border-radius: 0.3em;
+	margin-top: 15px;
+	margin-bottom: 5px;
+	padding: 5px;
+}
+.resSubtitle{
+	font-weight: bold;
+	margin-top:8px;
+	color: #a11;
+}

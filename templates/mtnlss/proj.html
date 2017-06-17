@@ -1,0 +1,63 @@
+{% extends 'mtnlss/base.html' %}
+
+{% block include_js %}
+{% load static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/proj.js' %}" ></script>
+<link rel="stylesheet" type="text/css" href="{% static 'proj-style.css' %}" />
+{% endblock %}
+
+{% block title %}
+	{{ form.instance.title }} 
+{% endblock %}
+
+{% block content %}
+	<span id='proj_id_div' style='visibility:hidden'>{{form.instance.id}}</span>
+	<div class="projEditDiv" style='float:left'>
+	<form action="/whatever/" method="POST" id="projEditForm">
+    	{% csrf_token %}
+		<div class='projLabel'>{{ form.title }}</div>
+		<div class='editProjTitleLabel' onClick='enableProjTitle()'>
+			<img src='{% static 'images/edit.png' %}' style="width:12px;"></img>
+			<span style='cursor: pointer'> Edit title</span>
+		</div>
+		<input id='saveProjTitleChangeButton' type="submit" value="Save" /><input type='button' id='cancelProjTitleChangeButton' onClick='disableProjTitle()' value='Cancel'/>
+	</form>
+	</div>
+	<div id='analyzeButton'><a href='{% url 'analysisfirstpage' projID=form.instance.id %}'>Analyse</a></div>
+	<br><br><br><br>
+	
+	<div id='projPageTopContainer'>
+		<div id='questionsListBox'>
+			<!-- JS code brings the code from extraQuestionsList here -->
+		</div>
+		<div id="variableBox" class='boxOuter'>
+			<div  class='topRibbon'>
+			Variables: <span class='numberLabel'>{{form.instance.variable_set.count}} </span>
+			</div>
+			<div class='boxInner'>
+				<div id='varsScrollBox'>
+				{% for var in form.instance.variable_set.all %}
+					<span class='varLabel' id='varLabel_{{var.id}}' onClick='selectVar({{var.id}})'>
+						<span class='varEditButton' onClick='editVarNameClicked({{var.id}})'><img src='{% static 'images/edit.png' %}' style="width:8px;"></img></span>
+						<input class='varLabeltf' id='varLabeltf_{{var.id}}' data-initialVal='{{var.name}}' type='textfield' value='{{var.name}}'></input>
+					</span>
+				{% endfor %}
+				</div>
+				
+				<div id='varBoxFooter'>
+					<input style='float:right' type='button' value='Delete Selected' onClick='deleteSelectedVars()'></input>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class='boxOuter' id='papersListBox'>
+		<!-- JS code brings the code from PapersList here -->
+	</div>
+	
+	<div id='darkLayer'></div>
+	<div id='paperPopup'></div>
+	<div id="waitingImage"><img style='float: left; margin-right: 4px; margin-top: 5px;' src="{% static 'images/ajax-loader.gif' %}"></div>
+{% endblock %}
+

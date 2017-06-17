@@ -1,0 +1,30 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+
+{% block include_js %}{% endblock %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    
+</head>
+<body>
+	<div class="headerBar">
+	    <span><a href="/">Home</a></span>
+	    {% if user.is_authenticated %}
+	    <span>hello</span>
+	    <span>welcome {{ user.username }}</span>
+	    <span><a href="/accounts/logout">Logout</a></span>
+	    {% else %}
+	    <span><a href="/accounts/login">Login</a></span>
+	    <span><a href="/accounts/register">Register</a></span>
+	    {% endif %}
+	  </div>
+	  
+	  <div class='contentDiv'>
+	  	{% block content %}{% endblock %}
+	  </div>
+    
+</body>
+</html>

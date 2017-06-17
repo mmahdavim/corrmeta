@@ -1,0 +1,19 @@
+<div id='extraQuestionsBox' class='boxOuter'>
+	<div class='topRibbon'>Moderator Variables</div>
+	<div id='extraQuestionsInside' class='boxInner'>
+		{% for question in project.question_set.all %}
+			<div class='questionRow'>
+				<div style='width: 310px'>{{question.text}}</div>
+				<div class='questionDeleteDiv' style='width:10px' title='Delete question' onClick='deleteQuestion({{question.id}})'><img src='../../static/images/delete.ico' style="width:15px;"></img></div>
+			</div>
+		{% endfor %}
+		
+		<div class='tableHeader newQuestionFormDiv'>
+		<form action="/alaki/" method="post" id="addQuestionForm">
+			{% csrf_token %}
+			<div style='width: 280px' {% if newQuestionForm.title.errors %}class="errorField"{% endif %}>{{newQuestionForm.text}}</div>
+			<input class='saveButton' type="submit" value="Add" />
+		</form>
+		</div>
+	</div>
+</div>

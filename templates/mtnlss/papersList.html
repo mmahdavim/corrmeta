@@ -1,0 +1,38 @@
+{% load static %}
+<div  class='topRibbon'>
+Papers: <span class='numberLabel'>{{project.paper_set.count}} </span>
+</div>
+<div class='boxInner'>
+	<div class='tableHeader'>
+		<div style='width: 23px'>ID</div>
+		<div style='width: 240px'>Title</div>
+		<div>Year</div>
+		<div>Authors</div>
+		<div>Variables</div>
+		<div>Sample Size</div>
+	</div>
+	{% for paper in project.paper_set.all %}
+		<div class='paperRow {% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}'>
+			<div style='width: 23px'>{{paper.id}}</div>
+			<div style='width: 240px; cursor:pointer' onClick='openPaperFrame({{paper.id}})'><a>{{paper.getMidlengthName}}</a></div>
+			<div>{{paper.year}}</div>
+			<div>{{paper.authors}}</div>
+			<div>{{paper.variables.count}}</div>
+			<div style="width: 127px">{{paper.sample_size}}</div>
+			<div class='paperDeleteDiv' style='width:40px' title='Delete paper' onClick='deletePaper({{paper.id}})'><img src='{% static 'images/delete.ico' %}' style="width:15px;"></img></div>
+		</div>
+	{% endfor %}
+	<div class='tableHeader newPaperFormDiv'>
+	<form action="/alaki/" method="post" id="addPaperForm">
+		{% csrf_token %}
+		<div style='width: 23px'></div>
+		<div style='width: 240px' {% if newPaperForm.title.errors %}class="errorField"{% endif %}>{{newPaperForm.title}}</div>
+		<div {% if newPaperForm.year.errors %}class="errorField"{% endif %}>{{newPaperForm.year}}</div>
+		<div {% if newPaperForm.authors.errors %}class="errorField"{% endif %}>{{newPaperForm.authors}}</div>
+		<div></div>
+		<div style="width: 120px" {% if newPaperForm.sample_size.errors %}class="errorField"{% endif %}>{{newPaperForm.sample_size}}</div>
+		
+		<input class='saveButton' type="submit" value="Add" />
+	</form>
+	</div>
+</div>

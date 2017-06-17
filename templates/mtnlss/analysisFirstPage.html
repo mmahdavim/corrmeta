@@ -1,0 +1,65 @@
+{% extends 'mtnlss/base.html' %}
+
+{% block include_js %}
+{% load static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/analysis.js' %}" ></script>
+<link rel="stylesheet" type="text/css" href="{% static 'analysis-style.css' %}" />
+{% endblock %}
+
+{% block title %}Analysis{% endblock %}
+
+
+
+{% block content %}
+<div id='chooseAnalVarsBox' class='boxOuter'>
+	<div class='topRibbon'>Select Variables</div>
+	<div id='chooseAnalVarsBoxInside' class='boxInner'>
+		<div id='userGuide'>Please choose the variables you want to use for the analysis.</div>
+		<form action="/analysisresult/{{project.id}}/" method="POST" id="prepareAnalysisForm"> 
+			{% csrf_token %}
+			<table id='analFPTable'>
+			<tr>
+				<td class='analFPtd'>
+					<div>Group 1:</div>
+					<select name='group1' multiple size=20 class='chooseAnalVarSelect' id='chooseAnalVarSelect1'></select>
+					<div><input type='button' id='analFPRemoveVar' value='Remove Selected' onClick='removeFromBox(1)'></input></div>
+					<div>
+						<select class='analFPDropdown' id='dropdown1'>
+							{% for v in project.variable_set.all %}
+								<option value="{{v.id}}">{{v.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div><input type='button' value='Add' onClick='addToBox(1)' style='float:left;'></input></div>
+					<div><input type='button' value='Add all' onClick='addAllToBox(1)' style='float:right;'></input></div>
+				</td>
+				<td class='analFPtd'>
+					<div>Group 2:</div>
+					<select name='group2' multiple size=20 class='chooseAnalVarSelect' id='chooseAnalVarSelect2'></select>
+					<div><input type='button' id='analFPRemoveVar' value='Remove Selected' onClick='removeFromBox(2)'></input></div>
+					<div>
+						<select class='analFPDropdown' id='dropdown2'>
+							{% for v in project.variable_set.all %}
+								<option value="{{v.id}}">{{v.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div><input type='button' value='Add' onClick='addToBox(2)' style='float:left;'></input></div>
+					<div><input type='button' value='Add all' onClick='addAllToBox(2)' style='float:right;'></input></div>
+				</td>
+			</tr>
+			</table>
+			<div id='finalAnalyzeButtonContainer'><input type='submit' id='finalAnalyzeButton' value='Analyze'></input></div>
+		</form>
+	</div>
+</div>
+
+<div style='visibility:hidden' id='hiddenDiv'>
+{% for id,name in varsDict.items %}
+	<div class='hiddenVar' id='{{id}}'>{{name}}</div>
+{% endfor %}
+</div>
+
+{% endblock %}
+
