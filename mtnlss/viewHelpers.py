@@ -144,7 +144,7 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     h_sigmar2 = sum(h_sigmar2_toAdd)/h_N
     h_SDr = math.sqrt(h_sigmar2)
     h_SEr = h_SDr/math.sqrt(h_K)
-    h_sigmae2 = (1-h_rmean**2)**2 / (h_N/(h_K-1))
+    h_sigmae2 = (1-h_rmean**2)**2 / ((h_N/h_K)-1)
     h_sigmap2 = h_sigmar2 - h_sigmae2
     if h_sigmap2<0:
         h_sigmap2 = 0
