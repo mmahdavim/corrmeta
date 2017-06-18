@@ -303,7 +303,9 @@ def analysisResult(request, projID):
     theProj = Project.objects.get(pk=projID)
     group1varids = request.POST.getlist('group1')
     group2varids = request.POST.getlist('group2')
-    pairs,results = getAnalysisResults(theProj,group1varids,group2varids)
+    sig1 = request.POST['sig1']
+    sig2 = request.POST['sig2']
+    pairs,results = getAnalysisResults(theProj,group1varids,group2varids,float(sig1)/100,float(sig2)/100)
     
     return render(request,'mtnlss/analysisResult.html', {'project': theProj, 'pairs': pairs, 'results':results})
     

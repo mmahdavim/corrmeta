@@ -68,7 +68,7 @@ def getCorsDivCode(paperID):
 # 
 #     return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
 
-def getAnalysisResults(theProj, group1varids, group2varids):
+def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2):
     pairs = []
     h_sum_w2 = 0
     h_sum_wES2 = 0
@@ -76,8 +76,6 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     h_sum_w = 0
     h_sum_W = 0
     h_sum_Z = 0
-    h_sig1 = 0.95
-    h_sig2 = 0.80
     h_rmean = 0
     h_rcmean = 0
     
@@ -195,8 +193,8 @@ def getAnalysisResults(theProj, group1varids, group2varids):
     results['N'] =  h_N
     results['K'] =  h_K
     results['average'] =  h_average
-    results['sig1'] =  h_sig1
-    results['sig2'] =  h_sig2
+    results['sig1'] =  int(h_sig1*100)
+    results['sig2'] =  int(h_sig2*100)
     results['FSN'] =  h_FSN
     results['Q'] =  h_Q
     results['dr'] =  h_dr

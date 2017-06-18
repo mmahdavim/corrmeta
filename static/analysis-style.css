@@ -17,10 +17,26 @@
 #userGuide{
 	margin: 0 auto; width: 800px; margin-bottom: 30px;
 }
+.getSigBox{
+	overflow:auto;
+	width: 500px;
+	margin: 0 auto;
+	margin-top:10px;
+	font-size: 14px;
+}
+.getSigLabel{
+	float: left;
+	width: 250px;
+	padding-top: 2px;
+}
+.getSigTextfield{
+	float: left;
+}
+
 #sidebar{
-	width: 448px;
+	width: 470px;
 	float:left;
-	margin-left:-50px;
+	margin-left:-68px;
 }
 #mainResultBox{
 	width: 630px;
@@ -59,6 +75,7 @@
 #pairRowHeader span{
 	font-weight: bold;
 }
+
 .resLabel{
 	float: left;
 	width: 300px;
