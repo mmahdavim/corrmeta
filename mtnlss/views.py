@@ -429,10 +429,7 @@ def importFromFile(request):
         proj.admins.add(request.user)
         proj.save()
         counter = 0
-        print("logging")
         for row in readCSV:
-            for z in row:
-                print(z)
             for x in row:
                 print("x1",x)
                 try:
@@ -440,7 +437,7 @@ def importFromFile(request):
                     print("x3",x)
                 except:
                     x = unicode("BADINPUT")
-            print(row)
+            print(row[1])
             counter += 1
             if counter<2:
                 continue
