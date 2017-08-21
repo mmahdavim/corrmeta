@@ -170,7 +170,7 @@ function addVariableAjax(userInput,paperID,newOrExisting){
 				alert("Something went wrong. Please make sure you entered a valid variable name.")
 				return;
 			}
-			$('#varsHiddenDiv').html(message);
+			$('#hiddenCode').html(message);
 			refreshCorTable();
         },
         error : function(xhr,errmsg,err) {

@@ -303,6 +303,10 @@ function exportPapers(){
 	if (theGetPart.length>11){
 		theGetPart = theGetPart.slice(0,-1);
 	}
+	else{
+		alert("No papers are selected!");
+		return;
+	}
 	window.location.href = "../exportPapers"+theGetPart;
 }
 

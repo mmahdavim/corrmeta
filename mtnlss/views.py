@@ -162,8 +162,8 @@ def corTable(request,paperID):
 def addExistingVariable(request,paperID):
     varID = request.POST.get('thevar')
     addExistingVariableToDB(varID,paperID)
-    varsDivCode = getVarsDivCode(paperID)
-    return HttpResponse(varsDivCode)
+    hiddenDiv = getHiddenDivs(request, paperID)
+    return HttpResponse(hiddenDiv)
     
 @login_required
 def addNewVariable(request,paperID):
@@ -174,8 +174,8 @@ def addNewVariable(request,paperID):
         newVar = Variable(name=n, project=p.project)
         newVar.save()
         addExistingVariableToDB(newVar.id,paperID)
-        varsDivCode = getVarsDivCode(paperID)
-        return HttpResponse(varsDivCode)
+        hiddenDiv = getHiddenDivs(request, paperID)
+        return HttpResponse(hiddenDiv)
     else:
         print(varForm)
         return HttpResponse("Error")
@@ -424,8 +424,8 @@ def importFromFile(request):
     readCSV = csv.reader(csvfile, delimiter=',')
     proj = Project(title=projTitle)
     proj.save()
-    theProj.admins.add(request.user)
-    theProj.save()
+    proj.admins.add(request.user)
+    proj.save()
     counter = -1
     for row in readCSV:
         counter += 1
