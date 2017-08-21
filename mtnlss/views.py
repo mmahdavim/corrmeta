@@ -434,13 +434,12 @@ def importFromFile(request):
             for z in row:
                 print(z)
             for x in row:
-                print("x",x)
+                print("x1",x)
                 try:
-                    x = x.decode("UTF-8")
-                    print(1,x)
-                    x = re.sub(r"\x..","",x)
-                    print(2,x)
                     x = unicode(x)
+                    print("x2",x)
+                    x = re.sub(r'[^\x00-\x7f]',r' ',x)
+                    print("x3",x)
                 except:
                     x = "BAD_INPUT"
             counter += 1
