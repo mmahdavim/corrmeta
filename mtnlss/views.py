@@ -429,12 +429,15 @@ def importFromFile(request):
         proj.admins.add(request.user)
         proj.save()
         counter = 0
+        print("logging")
         for row in readCSV:
             for x in row:
                 try:
                     x = x.decode("UTF-8")
+                    print(1,x)
                     x = re.sub(r"\x..","",x)
-                    x = unicode
+                    print(2,x)
+                    x = unicode(x)
                 except:
                     x = "BAD_INPUT"
             counter += 1
