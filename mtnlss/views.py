@@ -477,7 +477,10 @@ def importFromFile(request):
         return HttpResponse("Please upload a file with unicode (UTF-8) formatting.")
     except Exception, e:
         HttpResponse("Error parsing file in row "+str(counter)+": "+type(e).__name__+" "+str(e))
-    return HttpResponse("Done")
+    if counter<3:
+        proj.delete()
+        return HttpResponse("No valid data rows were found on the file.")
+    return HttpResponse("Done reading "+str(counter-1)+" rows.")
 
 @login_required
 def metaAnalysisFirstPage(request, projID):

@@ -37,11 +37,11 @@ $(document).ready(function(e) {
 		var formData = new FormData($('#importForm')[0]);
 		$("#waitingImage").show();
 		$('#importBox').fadeOut('fast');
-		$(document).unbind();
+		$(document).unbind("click");
 		$('#darkLayer').hide();
 		dfr = $.ajax({
 	        url : "../importfromfile/",
-	        type : "POST", // http method
+	        type : "POST",
 	        data : formData, 
 	        processData: false,
 	        contentType: false,
