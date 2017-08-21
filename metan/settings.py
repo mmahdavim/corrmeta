@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&t#_bu7^2#f)1%^3dsr7^d2l0!0e4l9=@v&)yiqag%#1x&-!m6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['https://mohsenmm.fwd.wf','http://mohsenmm.fwd.wf',u'mohsenmm.fwd.wf','127.0.0.1']
 
@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['https://mohsenmm.fwd.wf','http://mohsenmm.fwd.wf',u'mohsenmm.f
 # Application definition
 
 INSTALLED_APPS = [
+    'mtnlss',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'mtnlss'
+
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,17 @@ ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, us
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.10/howto/static-files/
+
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# The URL to use when referring to static files (where they will be served from)
+STATIC_URL = '/static/'
