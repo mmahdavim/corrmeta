@@ -1,0 +1,50 @@
+{% extends 'mtnlss/base.html' %}
+
+{% block include_js %}
+{% load static %}
+{% load index %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/analysis.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/metaAnal.js' %}" ></script>
+<link rel="stylesheet" type="text/css" href="{% static 'analysis-style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'paper-style.css' %}" />
+{% endblock %}
+
+{% block title %}Analysis{% endblock %}
+
+
+
+{% block content %}
+<div class='boxOuter'>
+	<div class='topRibbon'>Meta-Analysis Correlation Table</div>
+	<div style='text-align: center'>
+	<div style='display:inline-block'>
+	<br><br>
+		<div class='headerDiv'>
+			<div  class='' style='width: 133px; display:inline-block;float:left'>&nbsp;</div>
+			{% for varName in varNames %}
+				<div  class='corTableHeaderCell'  style='margin-right: -25.5px;' id='firstRow_{{forloop.counter}}'>{{varName}}</div>
+			{% endfor %}
+			&nbsp;&nbsp;&nbsp;&nbsp;<br><br><br>
+			<div id='ghostSecondRow'>&nbsp;</div>
+		</div>
+		{% for i in results %}
+			<div class='rowDiv'>
+				<div  class='metaTableCell' style='font-size: 15px; max-width: 120px; min-width:120px; overflow: hidden;' id='firstCol_{{forloop.counter}}'>{{ varNames|index:forloop.counter }}</div>
+				{% for j in i %}
+					{% if forloop.parentloop.counter > forloop.counter %}
+						<div class='metaTableCell' style='font-size: 14px; color: #e66;' id='cell_{{forloop.parentloop.counter}}_{{forloop.counter}}'>{{j}}</div>
+					{% else %}
+						<div class='metaTableCell changeableCell' style='font-size: 14px;' id='cell_{{forloop.parentloop.counter}}_{{forloop.counter}}' data-initial="{{j}}">{{j}}</div>
+					{% endif %}
+				{% endfor %}	
+			</div>
+		{% endfor %}
+		<br>
+		<input type='checkbox' checked id='showSigCheckbox' onClick="clickedShowSigCheckbox()"/><span style='margin-left: 2px; font-size: 15px;'>Show Significance Level</span>
+	</div>
+	</div>
+	<br><br>
+</div>
+{% endblock %}
+

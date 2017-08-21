@@ -1,0 +1,9 @@
+<div class="headerBar">
+	    <span style="margin-right:30px;"><a href="/">Home</a></span>
+	    {% if user.is_authenticated %}
+	    <span><a href="/accounts/logout">Log out ({{ user.username }})</a></span>
+	    {% else %}
+	    <span style="margin-right:30px;"><a href="/accounts/login">Login</a></span>
+	    <span><a href="/accounts/register">Register</a></span>
+	    {% endif %}
+</div>

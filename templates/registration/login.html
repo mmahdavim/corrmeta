@@ -1,25 +1,31 @@
 {% extends "registration/base.html" %}
-
+{% load static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
 {% block title %}Log in{% endblock %}
 
 {% block content %}
-
-<h1>Log in</h1>
-
-{% if form.errors %}
-<p class="error">Please correct the errors below:</p>
-{% endif %}
-
-<form method="post" action="?next={{ "/mtnlss" }}">{% csrf_token %}
-<dl>
-<dt><label for="id_username">Username:</label>{% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}</dt>
-<dd>{{ form.username }}</dd>
-<dt><label for="id_password">Password:</label>{% if form.password.errors %} <span class="error">{{ form.password.errors|join:", " }}</span>{% endif %}</dt>
-<dd>{{ form.password }}</dd>
-<dt><input type="submit" value="Log in" /></dt>
-</dl>
-</form>
+<div class='boxOuter' style='width:300px; margin: 0 auto; margin-top:150px;'>
+<div class='topRibbon'>Log in</div>
+	<div class='boxInner'>
+		{% if form.errors %}
+		<p class="error">Please correct the errors below:</p>
+		{% endif %}
+		
+		<form method="post" action="?next={{ "/mtnlss" }}">{% csrf_token %}
+			<dl>
+			<dt><label for="id_username" style='margin-right: 10px;'>Username:</label>{% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}</dt>
+			<dd>{{ form.username }}</dd>
+			<br>
+			<dt><label for="id_password" style='margin-right: 15px;'>Password:</label>{% if form.password.errors %} <span class="error">{{ form.password.errors|join:", " }}</span>{% endif %}</dt>
+			<dd>{{ form.password }}</dd>
+			<br>
+			<dt><input type="submit" value="Log in" /></dt>
+			</dl>
+		</form>
+	</div>
+</div>
 {% endblock %}
+
 
 {% block content-related %}
 <p>If you don't have an account, you can <a href="/accounts/register/">sign

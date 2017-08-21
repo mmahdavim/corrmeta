@@ -84,6 +84,9 @@ class VarPaper(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     var = models.ForeignKey(Variable, on_delete=models.CASCADE)
     order = models.IntegerField()
+    mean = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=10)
+    sd = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=10)
+    alpha = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=10)
     class Meta:
         unique_together = ('var', 'paper',)
 
@@ -100,9 +103,7 @@ class VarPaper(models.Model):
 class Correlation(models.Model):
     #For paper p, what is the correlation between var1 and var2
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-    value = models.DecimalField(blank=True,null=True,decimal_places=3,max_digits=5)
+    value = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=10)
     var1 = models.ForeignKey(Variable, on_delete=models.CASCADE, related_name="var1")
     var2 = models.ForeignKey(Variable, on_delete=models.CASCADE, related_name="var2")
     
-
-# pre_init.connect(extraInitForCorrelation,Correlation)

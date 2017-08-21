@@ -1,0 +1,58 @@
+{% extends 'mtnlss/base.html' %}
+
+{% block include_js %}
+{% load static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/analysis.js' %}" ></script>
+<link rel="stylesheet" type="text/css" href="{% static 'analysis-style.css' %}" />
+{% endblock %}
+
+{% block title %}Meta-Analysis Table{% endblock %}
+
+
+
+{% block content %}
+<div class='boxOuter'>
+	<div class='topRibbon'>Select Variables</div>
+	<div class='boxInner'>
+		<div id='userGuide'>Please choose the variables you want to use for the meta-analysis table.</div>
+		<form action="/metaanalysisresult/{{project.id}}/" method="POST" id="prepareMetaAnalysisForm"> 
+			{% csrf_token %}
+
+			<table style='margin: 0 auto;'><tr><td>
+				<select name='group1' multiple size=20 class='chooseAnalVarSelect' id='chooseAnalVarSelect3'></select>
+				<div><input type='button' id='analFPRemoveVar' value='Remove Selected' onClick='removeFromBox(3)'></input></div>
+				<div>
+					<select class='analFPDropdown' id='dropdown3'>
+						{% for v in project.variable_set.all %}
+							<option value="{{v.id}}">{{v.name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div>
+					<div><input type='button' value='Add' onClick='addToBox(3)' style='float:left;'></input></div>
+					<div><input type='button' value='Add all' onClick='addAllToBox(3)' style='float:right;'></input></div>
+				</div>
+			</td></tr></table>
+			<div class='getSigBox'>
+				<div class='getSigLabel'>Significance Level, <b>Confidence</b> Intervals (%):</div>
+				<input class='getSigTextfield' name='sig1' size=2 type='textfield' value=95></input>
+			</div>
+			<div class='getSigBox'>
+				<div class='getSigLabel'>Significance Level, <b>Credibility</b> Intervals (%):</div>
+				<input class='getSigTextfield' name='sig2' size=2 type='textfield' value=80></input>
+			</div>
+			<br>
+			<div  style='margin: 0 auto; width: 178px;'><input type='submit' id='finalMetaAnalyzeButton' value='Generate Meta-Analysis Table'/></div>
+		</form>
+	</div>
+</div>
+
+<div style='visibility:hidden' id='hiddenDiv'>
+{% for id,name in varsDict.items %}
+	<div class='hiddenVar' id='{{id}}'>{{name}}</div>
+{% endfor %}
+</div>
+
+{% endblock %}
+

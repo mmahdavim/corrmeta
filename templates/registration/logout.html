@@ -1,8 +1,15 @@
 {% extends "registration/base.html" %}
-
+{% load static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
 {% block title %}Logged out{% endblock %}
 
 {% block content %}
-<h1>You've been logged out.</h1>
-<p>Thanks for stopping by; when you come back, don't forget to <a href="/accounts/login/">log in</a> again.</p>
+<div class='boxOuter' style='width:300px; margin: 0 auto; margin-top:150px;'>
+<div class='topRibbon'>Logged out</div>
+	<div class='boxInner'>
+		<p>You've been logged out of your account. To be able to manage projects and add data, you need to <a href="/accounts/login/">log in</a> again.</p>
+	</div>
+</div>
 {% endblock %}
+
+

@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block title %}
-	{{ form.instance.title }} 
+	{{ form.instance.title }}
 {% endblock %}
 
 {% block content %}
@@ -24,9 +24,9 @@
 		<input id='saveProjTitleChangeButton' type="submit" value="Save" /><input type='button' id='cancelProjTitleChangeButton' onClick='disableProjTitle()' value='Cancel'/>
 	</form>
 	</div>
-	<div id='analyzeButton'><a href='{% url 'analysisfirstpage' projID=form.instance.id %}'>Analyse</a></div>
+	<span class='analButtons' id='analyzeButton'><a href='{% url 'analysisfirstpage' projID=form.instance.id %}'>Analysis</a></span>
+	<span class='analButtons' id='metaanalyzeButton' style='margin-right: 10px;'><a href='{% url 'metaanalysisfirstpage' projID=form.instance.id %}'>Meta-analysis Table</a></span>
 	<br><br><br><br>
-	
 	<div id='projPageTopContainer'>
 		<div id='questionsListBox'>
 			<!-- JS code brings the code from extraQuestionsList here -->

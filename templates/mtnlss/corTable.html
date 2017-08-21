@@ -3,6 +3,9 @@
 <div class='headerDiv'>
 		<div  class='' style='width: 220px; display:inline-block;float:left;'>&nbsp;
 		</div>
+		<div  class='corTableHeaderCell' style='color: grey; font-weight: bold;'>Mean</div>
+		<div  class='corTableHeaderCell' style='color: grey; font-weight: bold;'>SD</div>
+		<div  class='corTableHeaderCell' style='color: grey; font-weight: bold;'>α</div>
 	{% for i in varCount %}
 		<div  class='corTableHeaderCell' id='firstRow_{{forloop.counter}}'>
 		</div>
@@ -15,8 +18,10 @@
 		<div id='rowDeleteButton_{{forloop.counter}}' class='corTableCell rowButton rowDeleteButton' onClick='removeVariableClicked({{forloop.counter}})'><img src='{% static 'images/delete.ico' %}' width='10px'/></div>
 		<div id='rowDownButton_{{forloop.counter}}' class='corTableCell rowButton rowDownButton {% if varsLen == forloop.counter %}disabledRowButton{% endif %}' {% if varsLen != forloop.counter %}onClick='moveRow({{forloop.counter}},1)'{% endif %} ><img src='{% static 'images/down.png' %}' width='15px'/></div>
 		<div id='rowUpButton_{{forloop.counter}}' class='corTableCell rowButton rowUpButton {% if 1 == forloop.counter %}disabledRowButton{% endif %}' {% if 1 != forloop.counter %}onClick='moveRow({{forloop.counter}},-1)'{% endif %} ><img src='{% static 'images/up.png' %}' width='15px'/></div>
-		<div  class='corTableCell corTableCellFirstCol' id='firstCol_{{forloop.counter}}'>
-		</div>
+		<div  class='corTableCell corTableCellFirstCol' id='firstCol_{{forloop.counter}}'></div>
+		<div  class='corTableCell' id='mean_{{forloop.counter}}'></div>
+		<div  class='corTableCell' id='SD_{{forloop.counter}}'></div>
+		<div  class='corTableCell' id='alpha_{{forloop.counter}}'></div>
 		{% for j in varCount %}
 			<div class='corTableCell' id='cell_{{forloop.parentloop.counter}}_{{forloop.counter}}'></div>
 		{% endfor %}	
@@ -24,6 +29,9 @@
 {% endfor %}
 <div class='rowDiv' id='lastRow'>
 	<div  class='corTableCell corTableCellFirstCol' style='min-width: 223px; max-width: 223px; -background-color: yellow;'></div>
+	<div  class='corTableCell'></div>
+	<div  class='corTableCell'></div>
+	<div  class='corTableCell'></div>
 	{% for i in varCount %}
 		<div class='corTableCell lastRowCell'>{{forloop.counter}}</div>
 	{% endfor %}
@@ -38,7 +46,7 @@
 	 	{% endfor %}
 	</select>
 	<input id='saveNewVarButton' type='button' value='Add Variable' onClick='addVariableClicked()'></input>
-	<input id='saveTableButton' type='button' value='Save Correlations' onClick='saveCorrelations()'></input>
+	<input id='saveTableButton' type='button' value='Save Changes' onClick='saveCorrelations()'></input>
 	<br>
 	<form id='newVarForm' action="" method="post">
 		{% csrf_token %}

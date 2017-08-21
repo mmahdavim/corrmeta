@@ -16,12 +16,13 @@ def addExistingVariableToDB(varID,paperID):
     v = Variable.objects.get(pk=varID)
     vp = VarPaper(paper=p,var=v,order=newOrder)
     vp.save()
+    return vp
     
     
   
 def getReadableDecimal(value):
     if isinstance(value,Decimal):
-        value = "%.2f" % value
+        value = "%.4f" % value
     return str(value)
 
 
@@ -41,6 +42,7 @@ def getCorsDivCode(paperID):
     p = Paper.objects.get(pk=paperID)
     vars = p.getVarsOrdered()
     corsHiddenCode = "<div style='visibility:hidden' id='corsHiddenDiv'>\n\t"
+    #The correlations:
     for i in range(len(vars)):
         for j in range(len(vars)):
             value = ""
@@ -50,6 +52,27 @@ def getCorsDivCode(paperID):
                     value = valueInDB[0]
                 value = getReadableDecimal(value)
                 corsHiddenCode += "<div id='"+str(vars[i].id)+"____"+str(vars[j].id)+"'>"+value+"</div>"
+    #The first special columns (mean, SD, etc.):
+    for i in range(len(vars)):
+        vp = VarPaper.objects.filter(var=vars[i], paper=p)
+        if len(vp)>0 and vp[0]:
+            mean = vp[0].mean
+            sd = vp[0].sd
+            alpha = vp[0].alpha
+        else:
+            mean = ""
+            sd = ""
+            alpha = ""
+        if mean==None:
+            mean = ""
+        if sd==None:
+            sd = ""
+        if alpha==None:
+            alpha = ""
+        corsHiddenCode += "<div id='"+str(vars[i].id)+"____mean'>"+getReadableDecimal(mean)+"</div>"
+        corsHiddenCode += "<div id='"+str(vars[i].id)+"____sd'>"+getReadableDecimal(sd)+"</div>"
+        corsHiddenCode += "<div id='"+str(vars[i].id)+"____alpha'>"+getReadableDecimal(alpha)+"</div>"
+        
     corsHiddenCode += "\n</div>\n"
     return corsHiddenCode
 
@@ -68,7 +91,7 @@ def getCorsDivCode(paperID):
 # 
 #     return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
 
-def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2):
+def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2, forMeta=False):
     pairs = []
     h_sum_w2 = 0
     h_sum_wES2 = 0
@@ -114,7 +137,6 @@ def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2):
                 item['h_AR'] = h_AR
                 item['h_AZ'] = h_AZ
                 item['h_ASEF'] = h_ASEF
-
                 h_sum_w2 += h_WF2
                 h_sum_wES2 += h_WF*(h_AZ**2)
                 h_sum_wES +=   h_WF*h_AZ
@@ -124,6 +146,31 @@ def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2):
                 h_rmean += c.value*c.paper.sample_size if c.paper.sample_size!=None else 0
                 h_rcmean += h_AR*c.paper.sample_size if c.paper.sample_size!=None else 0
     h_K = len(pairs)
+    
+    #This part is for the special case where we're using this function for MetaAnalysis Table
+    if forMeta:
+        if h_N==0:
+            h_rcmean = "."
+            h_cl_low_rc = "."
+            h_cl_high_rc = "."
+        else:
+            h_rcmean = float(h_rcmean/h_N)
+            h_siglev = norm.ppf(1-(1-h_sig1)/2)
+            h_var_rc_toAdd =  [ float(x['h_W'])*((float(x['h_AR'])-h_rcmean)**2) for x in pairs ]
+            h_var_rc = sum(h_var_rc_toAdd)/h_sum_W
+            h_SDrc = math.sqrt(h_var_rc)
+            h_SErc = h_SDrc/math.sqrt(h_K)
+            h_cl_low_rc = h_rcmean - h_siglev*h_SErc
+            h_cl_high_rc = h_rcmean + h_siglev*h_SErc
+        results = {}
+        results['rcmean'] = h_rcmean
+        results['K'] = h_K
+        results['N'] = h_N
+        results['cl_low_rc'] = h_cl_low_rc
+        results['cl_high_rc'] = h_cl_high_rc
+        return results
+        
+        
     if h_N==0 or h_K<2:
         return None,None
     h_average = h_N/h_K
@@ -173,6 +220,7 @@ def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2):
     h_Q = h_sum_wES2 - h_sum_wES**2/h_sum_w
     h_dr = h_K -1
     h_l2 = (h_Q - (h_K-1))/h_Q
+    print(h_sum_w,h_sum_w2)
     h_T2 = (h_Q - (h_K -1)) / (h_sum_w - h_sum_w2/h_sum_w)
     if  h_Q <= h_K-1:
         h_l2 = 0
@@ -237,13 +285,29 @@ def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2):
     results['RE_cl_ES_high'] =  h_RE_cl_ES_high
     results['RE_Fisher_cl_low'] =  h_RE_Fisher_cl_low
     results['RE_Fisher_cl_high'] =  h_RE_Fisher_cl_high
-    
     return pairs,results
 
-
-
-
-
-
+def fillMetaAnalTable(theProj, varids,sig1,sig2):
+    results = []
+    for i in range(len(varids)):
+        row = []
+        for j in range(len(varids)):
+            if i==j:
+                row.append("1")
+                continue
+            analRes = getAnalysisResults(theProj, [varids[i]], [varids[j]], sig1, sig2, forMeta=True)
+            if j<i:
+                if analRes['rcmean']!=".":
+                    row.append('% 6.4g' % analRes['rcmean'])
+                else:
+                    row.append(".")
+            elif i<j:
+                value = str(analRes['K'])+" ("+str(analRes["N"])+")"
+                if "." not in [analRes['cl_low_rc'],analRes['cl_high_rc']] and analRes['cl_low_rc']*analRes['cl_high_rc']>0: #They had the same sign
+                    value = value[:-1]+"**)"
+                row.append(value)
+                
+        results.append(row)
+    return results
 
 

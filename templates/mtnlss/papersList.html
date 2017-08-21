@@ -5,6 +5,7 @@ Papers: <span class='numberLabel'>{{project.paper_set.count}} </span>
 <div class='boxInner'>
 	<div class='tableHeader'>
 		<div style='width: 23px'>ID</div>
+		<div style='width: 20px'><input type='checkbox' class='paper_checkbox_master' id='checkbox_master' onClick='clickedMasterCheckbox()'></div>
 		<div style='width: 240px'>Title</div>
 		<div>Year</div>
 		<div>Authors</div>
@@ -14,6 +15,7 @@ Papers: <span class='numberLabel'>{{project.paper_set.count}} </span>
 	{% for paper in project.paper_set.all %}
 		<div class='paperRow {% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}'>
 			<div style='width: 23px'>{{paper.id}}</div>
+			<div style='width: 20px; vertical-align: middle'><input type='checkbox' class='paper_checkbox' id='checkbox_{{paper.id}}'></div>
 			<div style='width: 240px; cursor:pointer' onClick='openPaperFrame({{paper.id}})'><a>{{paper.getMidlengthName}}</a></div>
 			<div>{{paper.year}}</div>
 			<div>{{paper.authors}}</div>
@@ -35,4 +37,5 @@ Papers: <span class='numberLabel'>{{project.paper_set.count}} </span>
 		<input class='saveButton' type="submit" value="Add" />
 	</form>
 	</div>
+	<a id='exportButton' onClick='exportPapers()' style='font-weight: bold; font-size: 18px; text-decoration: underline; margin-left: 10px; cursor: pointer;'>Export selected papers</a>
 </div>

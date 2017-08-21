@@ -90,6 +90,16 @@
 	display:table-cell;
     vertical-align:middle;
 }
+.metaTableCell{
+	-border: 1px solid gray;
+	width: 65px;
+	overflow: hidden;
+	display: inline-block;
+	height: 35px;
+	display:table-cell;
+    vertical-align:middle;
+    font-size: 13px;
+}
 .corTableCellFirstCol{
 	max-width: 150px;
 	min-width: 150px;
@@ -168,3 +178,7 @@
 #lastRow{
 	margin-top: -11px;
 }
+
+
+
+

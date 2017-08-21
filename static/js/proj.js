@@ -68,8 +68,11 @@ $(document).ready(function(e) {
 	
 	disableProjTitle();
 	$('#darkLayer').hide();
+	$('#downloadPopup').hide();
 	
 	fixVarLabelSizes();
+	
+	
 	
 	$("#waitingImage").css("visibility", 'hidden');
 	$(document).ajaxStart(function(){
@@ -287,6 +290,33 @@ function editVarName(id, newVal){
 		 }
 		 $('#varLabeltf_'+id).attr("disabled", "disabled");
 	});
+}
+
+function exportPapers(){
+	theGetPart = "?paper_ids=";
+	$('.paper_checkbox').each(function(){
+		if($(this).is(':checked')){
+			var paper_id = $(this).attr('id').substring(9);
+			theGetPart += paper_id+",";
+		}
+	});
+	if (theGetPart.length>11){
+		theGetPart = theGetPart.slice(0,-1);
+	}
+	window.location.href = "../exportPapers"+theGetPart;
+}
+
+function clickedMasterCheckbox(){
+	if($('#checkbox_master').is(':checked')){
+		$('.paper_checkbox').each(function(){
+			$(this).prop('checked', true)
+		});
+	}
+	else{
+		$('.paper_checkbox').each(function(){
+			$(this).prop('checked', false)
+		});
+	}
 }
 
 //////////////////////////////

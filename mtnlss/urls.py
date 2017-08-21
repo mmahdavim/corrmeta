@@ -20,6 +20,10 @@ urlpatterns = [
     url(r'^editvarname/(?P<projID>.+)/$', views.editVarName),
     url(r'^analysisfirstpage/(?P<projID>.+)/$', views.analysisFirstPage, name='analysisfirstpage'),
     url(r'^analysisresult/(?P<projID>.+)/$', views.analysisResult, name='analysisresult'),
+    url(r'^exportPapers/$', views.exportPapers, name='exportPapers'),
+    url(r'^importfromfile/$', views.importFromFile, name='importfromfile'),
+    url(r'^metaanalysisfirstpage/(?P<projID>.+)/$', views.metaAnalysisFirstPage, name='metaanalysisfirstpage'),
+    url(r'^metaanalysisresult/(?P<projID>.+)/$', views.metaAnalysisResult, name='metaanalysisresult'),
     
     url(r'^addNewVariable/(?P<paperID>.+)/$', views.addNewVariable),
     url(r'^addExistingVariable/(?P<paperID>.+)/$', views.addExistingVariable),

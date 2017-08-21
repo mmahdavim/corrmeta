@@ -26,10 +26,11 @@ a:hover{
 }
 
 .headerBar{
-	background-color: #bbb;
+	background-color: #ddd;
 	color: white;
-	padding: 4px;
+	padding: 12px;
 	width: 100%;
+	margin-left:-10px;
 }
 .contentDiv{
 	width: 1000px;
@@ -50,13 +51,14 @@ a:hover{
 	cell-padding: 10px;
 }
 .projsTable td{
-	padding: 5px;
+	padding: 10px;
 	vertical-align: top;
 	-min-width: 200px;
 }
 .sampleItems{
-	font-size: 10px;
+	font-size: 12px;
 	color: gray;
+	margin-top: 2px;
 }
 .oddRow{
 	background-color: #eee;
@@ -96,4 +98,24 @@ a:hover{
 }
 .deleteProjTD{
 	cursor: pointer;
+}
+#importBox{
+	width: 450px;
+	position: fixed;
+	margin: 0 auto;
+	right: 0;
+	left: 0;
+	top: 200px;
+	z-index: 3;
+}
+#darkLayer{
+	height: 100%;
+	width: 100%;
+	background-color: black;
+	opacity: 0.8;
+	float: left;
+	z-index: 2;
+	position: fixed;
+	top: 0;
+	left: 0;
 }

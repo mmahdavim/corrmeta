@@ -75,18 +75,6 @@ $(document).ready(function(e) {
 		$("#waitingImage").css("visibility", 'hidden');
 	});
 	
-	
-	//Align heights of the two top boxes
-//	h1 = $('#paperForm').height();
-//	h2 = $('#extQuesAnswersBox').height();
-//	var bigger = h1;
-//	if(h1<h2){
-//		bigger = h2;
-//	}
-//	console.log(bigger);
-//	$('#paperForm').css('height',bigger+'px');
-//	$('#extQuesAnswersBox').css('height',bigger+'px');
-	
 });
 
 /////////////////////////////////////
@@ -280,6 +268,19 @@ function fillCorTable(){
 			}
 		}
 	}
+	
+	//The first special columns (mean, SD, etc.)
+	for(var i=0; i<varCount; i++){
+		ii = i+1;
+		theVar = $('#var_'+ii).html();
+		mean = $('#'+theVar+"____mean").html();
+		sd = $('#'+theVar+"____sd").html();
+		alpha = $('#'+theVar+"____alpha").html();
+		
+		$('#mean_'+ii).html("<input class='corLikeInput' style='border: 1px solid #eee;' id='corLikeInputmean_"+ii+"' type='textfield' value='"+mean+"' data-initial='"+mean+"'></input>");
+		$('#SD_'+ii).html("<input class='corLikeInput' style='border: 1px solid #eee;' id='corLikeInputsd_"+ii+"' type='textfield' value='"+sd+"' data-initial='"+sd+"'></input>");
+		$('#alpha_'+ii).html("<input class='corLikeInput' style='border: 1px solid #eee;' id='corLikeInputalpha_"+ii+"' type='textfield' value='"+alpha+"' data-initial='"+alpha+"'></input>");
+	}
 }
 
 
@@ -308,23 +309,32 @@ function saveCorrelations(){
 			id2 = $('#var_'+col).html();
 			cor = $(this).val();
 			myKey = id1+"_"+id2;
-			console.log(myKey+"\t"+cor);
 			corData[myKey] = cor;
+		}
+	});
+	$('.corLikeInput').each(function(){
+		if($(this).val()!=$(this).attr("data-initial")){
+			elementID = $(this).attr("id");
+			underscoreIndex = elementID.indexOf("_");
+			row = elementID.slice(underscoreIndex+1); //The part after the underscore
+			id = $('#var_'+row).html();
+			value = $(this).val();
+			myKey = elementID.slice(12,underscoreIndex)+"_"+id; //e.g. sd_12, mean_3, etc. where the number is the variable id in the DB
+			corData[myKey] = value;
 		}
 	});
 	$.post("../savecorrelations/"+paperID+"/",corData,function(response,status){
 		if(status==="success" && response != "Error" && response != "nochange"){
-			alert("The updated correlation values were successfully saved.");
+			alert("The updated values were successfully saved.");
 		}
 		else if(response === "nochange"){
-			alert("No changes were detected in the correlation values. Nothing was altered in the database.");
+			alert("No changes were detected in the values. Nothing was altered in the database.");
 		}
 		else{
 			alert("Something went wrong. Please make sure the values you have entered are valid.");
 		}
 	});
 }
-
 
 //////////////////////////////
 function getCookie(name) {

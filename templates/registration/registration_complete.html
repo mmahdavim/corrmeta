@@ -1,8 +1,15 @@
 {% extends "registration/base.html" %}
-
+{% load static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}" ></script>
 {% block title %}Registration complete{% endblock %}
 
 {% block content %}
-<h1>Check your email</h1>
-<p>An activation link has been sent to the email address you supplied, along with instructions for activating your account.</p>
+<div class='boxOuter' style='width:300px; margin: 0 auto; margin-top:150px;'>
+<div class='topRibbon'>Registration complete</div>
+	<div class='boxInner'>
+		<p>An activation link has been sent to the email address you supplied, along with instructions for activating your account.</p>
+	</div>
+</div>
 {% endblock %}
+
+
