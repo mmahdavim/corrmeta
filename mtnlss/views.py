@@ -430,6 +430,13 @@ def importFromFile(request):
         proj.save()
         counter = 0
         for row in readCSV:
+            for x in row:
+                try:
+                    x = x.decode("UTF-8")
+                    x = re.sub(r"\x..","",x)
+                    x = unicode
+                except:
+                    x = "BAD_INPUT"
             counter += 1
             if counter<2:
                 continue
