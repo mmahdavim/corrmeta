@@ -35,6 +35,9 @@ $(document).ready(function(e) {
 	$(document).on('submit', '#importForm', function(event){
 		event.preventDefault();
 		var formData = new FormData($('#importForm')[0]);
+		$("#waitingImage").show();
+		$('#importBox').fadeOut('fast');
+		$('#darkLayer').hide();
 		dfr = $.ajax({
 	        url : "../importfromfile/",
 	        type : "POST", // http method
@@ -49,15 +52,14 @@ $(document).ready(function(e) {
 	        }
 	    });
 		dfr.then(function(){
-			$('#importBox').fadeOut('fast');
-			$('#darkLayer').hide();
+			$("#waitingImage").hide();
 			refreshProjsList();
 		});
 	});
 	
 	refreshProjsList();
 
-	$("#waitingImage").css("visibility", 'hidden');
+	$("#waitingImage").hide();
 	$(document).ajaxStart(function(){
 		console.log("ajax started");
 	    $("#waitingImage").show();

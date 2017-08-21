@@ -113,7 +113,7 @@ def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2, forM
             cors = list(chain(cors1, cors2))
             for c in cors:
                 item = {}
-                if c.paper.sample_size==None:
+                if c.paper.sample_size==None or c.paper.sample_size<3:      #I added "or c.paper.sample_size<3" later. I hope it's reasonable.
                     continue
                 item['paper_id'] = c.paper.id
                 item['sample_size'] = c.paper.sample_size

@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -143,44 +144,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # The URL to use when referring to static files (where they will be served from)
 STATIC_URL = '/static/'
-
-
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'corrmeta.noreply@gmail.com'
-DEFAULT_FROM_EMAIL = 'corrmeta.noreply@gmail.com'
-EMAIL_HOST_PASSWORD = 'CorrMet@'
-EMAIL_PORT = 587
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'applogfile': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'mtnlss.log'),
-            'maxBytes': 1024*1024*15, # 15MB
-            'backupCount': 10,
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': [],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        'mtnlss': {
-            'handlers': ['applogfile',],
-            'level': 'DEBUG',
-        },
-    }
-}
-
-

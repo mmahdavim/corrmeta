@@ -33,7 +33,7 @@
 			<div class='topRibbon'>Import Project Data From File</div>
 			<div class='boxInner'>
 				Please select the project title and the input file:<br><br>
-				<form id='importForm' action="/aaa/" method="POST" enctype="multipart/form-data">
+				<form id='importForm' action="/importfromfile/" method="POST" enctype="multipart/form-data">
 					{% csrf_token %}
 					Project Title: <input type="text" name="projtitle"/><br>
 				    Input File: &nbsp;&nbsp;&nbsp;&nbsp; <input type="file" name="myfile" /><br><br>
