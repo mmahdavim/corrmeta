@@ -431,7 +431,10 @@ def importFromFile(request):
         counter = 0
         print("logging")
         for row in readCSV:
+            for z in row:
+                print(z)
             for x in row:
+                print("x",x)
                 try:
                     x = x.decode("UTF-8")
                     print(1,x)
