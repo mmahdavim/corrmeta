@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models.signals import pre_init
 
 class Project(models.Model):
-    title = models.CharField(max_length=140)
+    title = models.CharField(max_length=540)
     admins = models.ManyToManyField(User)
     class Meta:
         ordering = ('id',)
@@ -24,7 +24,7 @@ class Project(models.Model):
             
 class Variable(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    name = models.CharField(max_length=140)
+    name = models.CharField(max_length=540)
     def getCorrelation(self,v2,p):
         v1 = self
 #         if sorted([v1.name,v2.name])[0] != v1:
@@ -41,9 +41,9 @@ class Variable(models.Model):
 
 class Paper(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    title = models.CharField(max_length=140)
-    authors = models.CharField(blank=True,null=True,max_length=140)
-    publication = models.CharField(blank=True,null=True,max_length=140)
+    title = models.CharField(max_length=540)
+    authors = models.CharField(blank=True,null=True,max_length=540)
+    publication = models.CharField(blank=True,null=True,max_length=540)
     year = models.IntegerField(blank=True,null=True)
     sample_size = models.IntegerField(blank=True,null=True)
     variables = models.ManyToManyField(Variable,through='VarPaper', related_name='its_paper')
@@ -67,13 +67,13 @@ class Paper(models.Model):
 
 
 class Question(models.Model):
-    text = models.CharField(max_length=140)
+    text = models.CharField(max_length=540)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     class Meta:
         ordering = ('id',)
 
 class Answer(models.Model):
-    value = models.CharField(blank=True,null=True,max_length=140)
+    value = models.CharField(blank=True,null=True,max_length=540)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     class Meta:
