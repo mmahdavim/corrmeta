@@ -436,12 +436,11 @@ def importFromFile(request):
             for x in row:
                 print("x1",x)
                 try:
-                    x = unicode(x)
-                    print("x2",x)
                     x = re.sub(r'[^\x00-\x7f]',r' ',x)
                     print("x3",x)
                 except:
-                    x = "BAD_INPUT"
+                    x = unicode("BADINPUT")
+            print(row)
             counter += 1
             if counter<2:
                 continue
