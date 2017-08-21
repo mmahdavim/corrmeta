@@ -11,6 +11,7 @@ from sqlite3 import ProgrammingError
 import math
 import csv
 
+from timeit import default_timer as timer
 
 @login_required
 def home(request):
@@ -429,14 +430,27 @@ def importFromFile(request):
         proj.admins.add(request.user)
         proj.save()
         counter = 0
+        g1=0
+        g2=0
+        g3=0
+        g4=0
+        g4s = timer()
         for row in readCSV:
+            g4e = timer()
+            g4 += (g4e-g4s)
+            g1s = timer()
+            if counter%10==0:
+                print(g1,g2,g3,g4)
             for x in row:
-                print("x1",x)
                 try:
                     x = re.sub(r'[^\x00-\x7f]',r' ',x)
                     print("x3",x)
                 except:
                     x = unicode("BADINPUT")
+            g1e = timer()
+            g1 += (g1e-g1s)
+            
+            g2s = timer()
             print(row[1])
             counter += 1
             if counter<2:
@@ -452,6 +466,9 @@ def importFromFile(request):
             var1,c  = Variable.objects.get_or_create(name=row[4], project=proj)
             var2,c = Variable.objects.get_or_create(name=row[5], project=proj)
             varPaper1 = VarPaper.objects.filter(var=var1,paper=paper).first()
+            g2e = timer()
+            g2 += (g2e-g2s)
+            g3s = timer()
             if varPaper1 == None:   #We update values only if nothing already exists
                 vp = addExistingVariableToDB(var1.id,paper.id)
                 if len(row[6])>0:
@@ -477,6 +494,9 @@ def importFromFile(request):
                 if len(row[11])>0:
                     cor.value=Decimal(row[11])
                     cor.save()
+            g3e = timer()
+            g3 += (g3e-g3s)
+            g4s = timer()
     except ProgrammingError:
         try:
             proj.delete()
