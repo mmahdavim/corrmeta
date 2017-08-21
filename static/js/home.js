@@ -37,6 +37,7 @@ $(document).ready(function(e) {
 		var formData = new FormData($('#importForm')[0]);
 		$("#waitingImage").show();
 		$('#importBox').fadeOut('fast');
+		$(document).unbind();
 		$('#darkLayer').hide();
 		dfr = $.ajax({
 	        url : "../importfromfile/",
