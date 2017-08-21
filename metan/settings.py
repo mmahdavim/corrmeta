@@ -26,7 +26,13 @@ SECRET_KEY = '&t#_bu7^2#f)1%^3dsr7^d2l0!0e4l9=@v&)yiqag%#1x&-!m6'
 DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
+EMAIL_USE_TLS = True
 
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'corrmeta.noreply@gmail.com'
+EMAIL_HOST_PASSWORD = 'CorrMet@'
+EMAIL_PORT = 587
 
 # Application definition
 
