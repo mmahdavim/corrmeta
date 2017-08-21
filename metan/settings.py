@@ -146,7 +146,7 @@ STATIC_URL = '/static/'
 
 
 EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'corrmeta.noreply@gmail.com'
 DEFAULT_FROM_EMAIL = 'corrmeta.noreply@gmail.com'
