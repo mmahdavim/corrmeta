@@ -12,6 +12,7 @@ from django.db import transaction
 import math
 import csv
 import re
+from timeit import default_timer as timer
 
 
 @login_required
@@ -424,6 +425,11 @@ def exportPapers(request):
 def importFromFile(request):
     corsToSave = []
     vpsToSave = {}
+    seenPapers = {}
+    seenVars = {}
+#     g1 = 0
+#     g2 = 0
+#     g3 = 0
     try:
         csvfile = request.FILES['myfile']
         projTitle = request.POST.get("projtitle")
@@ -434,6 +440,7 @@ def importFromFile(request):
         proj.save()
         counter = 0
         for row in readCSV:
+#             g1s = timer()
             for i in range(len(row)):
                 x = row[i]
                 try:
@@ -450,9 +457,33 @@ def importFromFile(request):
                 dflts["year"]=row[3]
             if len(row[10])>0:
                 dflts["sample_size"]=row[10]
-            paper,c = Paper.objects.get_or_create(title=row[1], project=proj,defaults=dflts)
-            var1,c  = Variable.objects.get_or_create(name=row[4], project=proj)
-            var2,c = Variable.objects.get_or_create(name=row[5], project=proj)
+#             g1e = timer()
+#             g1 += (g1e-g1s)
+#             
+#             g2s = timer()
+            ###
+            if row[1] not in seenPapers:
+                paper,c = Paper.objects.get_or_create(title=row[1], project=proj,defaults=dflts)
+                seenPapers[row[1]] = paper
+            else:
+                paper = seenPapers[row[1]]
+            
+            if row[4] not in seenVars:
+                var1,c = Variable.objects.get_or_create(name=row[4], project=proj)
+                seenVars[row[4]] = var1
+            else:
+                var1 = seenVars[row[4]]
+            
+            if row[5] not in seenVars:
+                var2,c = Variable.objects.get_or_create(name=row[5], project=proj)
+                seenVars[row[5]] = var2
+            else:
+                var2 = seenVars[row[5]]
+            ###
+#             g2e = timer()
+#             g2 += (g2e-g2s)
+#             
+#             g3s = timer()
             #Create the varPaper objects if you haven't already done so
             key = str(var1.id)+"__"+str(paper.id)
             if key not in vpsToSave:
@@ -474,13 +505,15 @@ def importFromFile(request):
                 if len(row[13])>0:
                     vpData[2] = Decimal(row[13])
                 vpsToSave[key] = [var2.id,paper.id]+vpData    
-            cor = var1.getCorrelation(var2,paper).first()
-            if cor==None:
-                cor = Correlation(var1=var1,var2=var2,paper=paper)
-                if len(row[11])>0:
-                    cor.value=Decimal(row[11])
-                    corsToSave.append(cor)
-        
+            cor = Correlation(var1=var1,var2=var2,paper=paper)
+            if len(row[11])>0:
+                cor.value=Decimal(row[11])
+                corsToSave.append(cor)
+#             g3e = timer()
+#             g3 += (g3e-g3s)
+#         
+#         g4 = 0
+#         g4s = timer()
         #Just to save time!
         with transaction.atomic():
             for vp,data in vpsToSave.iteritems():
@@ -492,6 +525,9 @@ def importFromFile(request):
                 vp.save()
             for cor in corsToSave:
                 cor.save()
+#         g4e = timer()
+#         g4 += (g4e-g4s)
+#         print(g1,g2,g3,g4)
     except Project:
         pass
 #     except ProgrammingError:
