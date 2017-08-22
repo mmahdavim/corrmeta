@@ -301,7 +301,7 @@ def deleteVars(request,projID):
             var = Variable.objects.get(pk=varid)
             var.delete();
         return HttpResponse("Done")
-    except:
+    except Exception, e:
         return HttpResponse("Error")
     
 @login_required
@@ -517,7 +517,6 @@ def importFromFile(request):
         #Just to save time!
         with transaction.atomic():
             for vp,data in vpsToSave.iteritems():
-                print(data)
                 vp = addExistingVariableToDB(data[0],data[1])
                 vp.mean = data[2]
                 vp.sd = data[3]
@@ -528,16 +527,14 @@ def importFromFile(request):
 #         g4e = timer()
 #         g4 += (g4e-g4s)
 #         print(g1,g2,g3,g4)
-    except Project:
-        pass
-#     except ProgrammingError:
-#         try:
-#             proj.delete()
-#         except:
-#             pass
-#         return HttpResponse("Please upload a file with unicode (UTF-8) formatting.")
-#     except Exception, e:
-#         return HttpResponse("Error parsing file in row "+str(counter)+": "+type(e).__name__+" "+str(e))
+    except ProgrammingError:
+        try:
+            proj.delete()
+        except:
+            pass
+        return HttpResponse("Please upload a file with unicode (UTF-8) formatting.")
+    except Exception, e:
+        return HttpResponse("Error parsing file in row "+str(counter)+": "+type(e).__name__+" "+str(e))
     if counter<3:
         proj.delete()
         return HttpResponse("No valid data rows were found on the file.")

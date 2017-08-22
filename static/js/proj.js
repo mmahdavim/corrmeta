@@ -99,12 +99,12 @@ function deletePaper(id){
 			if (message==="Error"){
 				alert("Something went wrong.")
 			}
+			refreshPapersList();
         },
         error : function(xhr,errmsg,err) {
             alert("Something went wrong.")
         }
     });
-	refreshPapersList();
 }
 
 function refreshPapersList(){
@@ -134,12 +134,12 @@ function deleteQuestion(id){
 			if (message==="Error"){
 				alert("Something went wrong.")
 			}
+			refreshQuestionsList();
         },
         error : function(xhr,errmsg,err) {
             alert("Something went wrong.")
         }
     });
-	refreshQuestionsList();
 }
 
 function refreshQuestionsList(){
@@ -231,6 +231,7 @@ function deleteSelectedVars(){
 		if(status==="success" && response != "Error"){
 			Object.keys(selectedVars).forEach(function(key) {
 				$('#varLabel_'+key).remove();
+				selectedVars = {};
 			});
 		}
 		else{
