@@ -14,7 +14,7 @@
 		<div class='topRibbon'>Projects</div>
 		<div id='projsBoxInside'>
 			<div style='text-align:right; margin-bottom: 10px;'><a style='padding: 5px; font-weight: bold; text-decoration:underline; font-size: 16px; cursor: pointer;' onClick='openImportBox()'>Import From File</a></div>
-			<div id='projsTableContainer'  style='border: 1px #bbb dashed; margin-bottom:8px;'>
+			<div id='projsTableContainer'  style='border-top: 1px #bbb dashed; border-bottom: 1px #bbb dashed; margin-bottom:8px;'>
 				<!-- JS code brings the code from ProjList here -->
 			</div>
 			
@@ -35,7 +35,7 @@
 				Please select the project title and the input file:<br><br>
 				<form id='importForm' action="/importfromfile/" method="POST" enctype="multipart/form-data">
 					{% csrf_token %}
-					Project Title: <input type="text" name="projtitle"/><br>
+					Project Title: <input type="text" id='importProjTitleTextBox' name="projtitle"/><br>
 				    Input File: &nbsp;&nbsp;&nbsp;&nbsp; <input type="file" name="myfile" /><br><br>
 				    <input type="submit" name="submit" value="Upload" />
 				</form>

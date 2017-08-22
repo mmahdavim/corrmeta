@@ -4,7 +4,7 @@
 <table class= "projsTable" style='border-collapse: collapse; width: 655px; '>
 <th> Project<td style='text-align: center'><b>Papers</b></td> <td  style='text-align: center'><b>Variables</b></td> </th>
 	{% for proj in projs %}
-	<tr class="{% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}"  style='border-top: 1px #ccc dashed;'>
+	<tr class="{% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}" style='border-top: 1px #ccc dashed;'>
 		<td style='min-width:130px;'><a href="/mtnlss/proj?id={{proj.id}}">{{proj.title}}</a></td>
 		<td style='min-width:190px;'>{{proj.paper_set.count}}<div class="sampleItems">{{proj.getPapersSummary}}</div></td>
 		<td style='width:70px'>{{proj.variable_set.count}}</td>

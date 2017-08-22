@@ -128,6 +128,7 @@ function openImportBox(){
 			} 
 		});
 	});
+	$('#importProjTitleTextBox').focus();
 	
 	$(document).keyup(function(e) {
 	     if (e.keyCode == 27) { 

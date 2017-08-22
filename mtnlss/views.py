@@ -8,10 +8,11 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from viewHelpers import *
 from sqlite3 import ProgrammingError
+from django.db import transaction
 import math
 import csv
+import re
 
-from timeit import default_timer as timer
 
 @login_required
 def home(request):
@@ -421,6 +422,8 @@ def exportPapers(request):
     
 @login_required
 def importFromFile(request):
+    corsToSave = []
+    vpsToSave = {}
     try:
         csvfile = request.FILES['myfile']
         projTitle = request.POST.get("projtitle")
@@ -430,28 +433,13 @@ def importFromFile(request):
         proj.admins.add(request.user)
         proj.save()
         counter = 0
-        g1=0
-        g2=0
-        g3=0
-        g4=0
-        g4s = timer()
         for row in readCSV:
-            g4e = timer()
-            g4 += (g4e-g4s)
-            g1s = timer()
-            if counter%10==0:
-                print(g1,g2,g3,g4)
-            for x in row:
+            for i in range(len(row)):
+                x = row[i]
                 try:
-                    x = re.sub(r'[^\x00-\x7f]',r' ',x)
-                    print("x3",x)
-                except:
-                    x = unicode("BADINPUT")
-            g1e = timer()
-            g1 += (g1e-g1s)
-            
-            g2s = timer()
-            print(row[1])
+                    x.decode('utf-8')
+                except UnicodeError:
+                    row[i] = re.sub(r'[^\x00-\x7f]',r' ',x)
             counter += 1
             if counter<2:
                 continue
@@ -465,46 +453,55 @@ def importFromFile(request):
             paper,c = Paper.objects.get_or_create(title=row[1], project=proj,defaults=dflts)
             var1,c  = Variable.objects.get_or_create(name=row[4], project=proj)
             var2,c = Variable.objects.get_or_create(name=row[5], project=proj)
-            varPaper1 = VarPaper.objects.filter(var=var1,paper=paper).first()
-            g2e = timer()
-            g2 += (g2e-g2s)
-            g3s = timer()
-            if varPaper1 == None:   #We update values only if nothing already exists
-                vp = addExistingVariableToDB(var1.id,paper.id)
+            #Create the varPaper objects if you haven't already done so
+            key = str(var1.id)+"__"+str(paper.id)
+            if key not in vpsToSave:
+                vpData = ["","",""]
                 if len(row[6])>0:
-                    vp.mean = Decimal(row[6])
+                    vpData[0] = Decimal(row[6])
                 if len(row[7])>0:
-                    vp.sd = Decimal(row[7])
+                    vpData[1] = Decimal(row[7])
                 if len(row[12])>0:
-                    vp.alpha = Decimal(row[12])
-                vp.save()
-            varPaper2 = VarPaper.objects.filter(var=var2,paper=paper).first()
-            if varPaper2 == None:   #We update values only if nothing already exists
-                vp = addExistingVariableToDB(var2.id,paper.id)
+                    vpData[2] = Decimal(row[12])
+                vpsToSave[key] = [var1.id,paper.id]+vpData
+            key = str(var2.id)+"__"+str(paper.id)
+            if key not in vpsToSave:
+                vpData = ["","",""]
                 if len(row[8])>0:
-                    vp.mean = Decimal(row[8])
+                    vpData[0] = Decimal(row[8])
                 if len(row[9])>0:
-                    vp.sd = Decimal(row[9])
+                    vpData[1] = Decimal(row[9])
                 if len(row[13])>0:
-                    vp.alpha =Decimal(row[13])
-                vp.save()
+                    vpData[2] = Decimal(row[13])
+                vpsToSave[key] = [var2.id,paper.id]+vpData    
             cor = var1.getCorrelation(var2,paper).first()
             if cor==None:
                 cor = Correlation(var1=var1,var2=var2,paper=paper)
                 if len(row[11])>0:
                     cor.value=Decimal(row[11])
-                    cor.save()
-            g3e = timer()
-            g3 += (g3e-g3s)
-            g4s = timer()
-    except ProgrammingError:
-        try:
-            proj.delete()
-        except:
-            pass
-        return HttpResponse("Please upload a file with unicode (UTF-8) formatting.")
-    except Exception, e:
-        HttpResponse("Error parsing file in row "+str(counter)+": "+type(e).__name__+" "+str(e))
+                    corsToSave.append(cor)
+        
+        #Just to save time!
+        with transaction.atomic():
+            for vp,data in vpsToSave.iteritems():
+                print(data)
+                vp = addExistingVariableToDB(data[0],data[1])
+                vp.mean = data[2]
+                vp.sd = data[3]
+                vp.alpha = data[4]
+                vp.save()
+            for cor in corsToSave:
+                cor.save()
+    except Project:
+        pass
+#     except ProgrammingError:
+#         try:
+#             proj.delete()
+#         except:
+#             pass
+#         return HttpResponse("Please upload a file with unicode (UTF-8) formatting.")
+#     except Exception, e:
+#         return HttpResponse("Error parsing file in row "+str(counter)+": "+type(e).__name__+" "+str(e))
     if counter<3:
         proj.delete()
         return HttpResponse("No valid data rows were found on the file.")

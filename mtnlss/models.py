@@ -54,10 +54,10 @@ class Paper(models.Model):
             return self.title[:20]+"..."
     
     def getMidlengthName(self):
-        if len(self.title)<38:
+        if len(self.title)<60:
             return self.title
         else:
-            return self.title[:38]+"..."
+            return self.title[:60]+"..."
         
     def getVarsOrdered(self):
         return self.variables.order_by('varpaper__order')
@@ -84,9 +84,9 @@ class VarPaper(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     var = models.ForeignKey(Variable, on_delete=models.CASCADE)
     order = models.IntegerField()
-    mean = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=10)
-    sd = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=10)
-    alpha = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=10)
+    mean = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=15)
+    sd = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=15)
+    alpha = models.DecimalField(blank=True,null=True,decimal_places=4,max_digits=15)
     class Meta:
         unique_together = ('var', 'paper',)
 

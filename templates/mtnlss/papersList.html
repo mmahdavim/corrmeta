@@ -4,26 +4,28 @@ Papers: <span class='numberLabel'>{{project.paper_set.count}} </span>
 </div>
 <div class='boxInner'>
 	<div class='tableHeader'>
-		<div style='width: 23px'>ID</div>
+		<div style='width: 43px'>ID</div>
 		<div style='width: 20px'><input type='checkbox' class='paper_checkbox_master' id='checkbox_master' onClick='clickedMasterCheckbox()'></div>
-		<div style='width: 240px'>Title</div>
+		<div style='width: 245px'>Title</div>
 		<div>Year</div>
 		<div>Authors</div>
 		<div>Variables</div>
 		<div>Sample Size</div>
 	</div>
-	{% for paper in project.paper_set.all %}
-		<div class='paperRow {% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}'>
-			<div style='width: 23px'>{{paper.id}}</div>
-			<div style='width: 20px; vertical-align: middle'><input type='checkbox' class='paper_checkbox' id='checkbox_{{paper.id}}'></div>
-			<div style='width: 240px; cursor:pointer' onClick='openPaperFrame({{paper.id}})'><a>{{paper.getMidlengthName}}</a></div>
-			<div>{{paper.year}}</div>
-			<div>{{paper.authors}}</div>
-			<div>{{paper.variables.count}}</div>
-			<div style="width: 127px">{{paper.sample_size}}</div>
-			<div class='paperDeleteDiv' style='width:40px' title='Delete paper' onClick='deletePaper({{paper.id}})'><img src='{% static 'images/delete.ico' %}' style="width:15px;"></img></div>
-		</div>
-	{% endfor %}
+	<div id='paperListScrollPane' style='height: 500px; overflow: auto; border: 2px #ccc solid; overflow-y:scroll;'>
+		{% for paper in project.paper_set.all %}
+			<div class='paperRow {% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}'>
+				<div style='width: 43px'>{{paper.id}}</div>
+				<div style='width: 20px; vertical-align: middle'><input type='checkbox' class='paper_checkbox' id='checkbox_{{paper.id}}'></div>
+				<div style='width: 245px; cursor:pointer' onClick='openPaperFrame({{paper.id}})'><a>{{paper.getMidlengthName}}</a></div>
+				<div>{{paper.year}}</div>
+				<div>{{paper.authors}}</div>
+				<div>{{paper.variables.count}}</div>
+				<div style="width: 127px">{{paper.sample_size}}</div>
+				<div class='paperDeleteDiv' style='width:40px' title='Delete paper' onClick='deletePaper({{paper.id}})'><img src='{% static 'images/delete.ico' %}' style="width:15px;"></img></div>
+			</div>
+		{% endfor %}
+	</div>
 	<div class='tableHeader newPaperFormDiv'>
 	<form action="/alaki/" method="post" id="addPaperForm">
 		{% csrf_token %}
