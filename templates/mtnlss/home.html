@@ -14,11 +14,11 @@
 		<div class='topRibbon'>Projects</div>
 		<div id='projsBoxInside'>
 			<div style='text-align:right; margin-bottom: 10px;'><a style='padding: 5px; font-weight: bold; text-decoration:underline; font-size: 16px; cursor: pointer;' onClick='openImportBox()'>Import From File</a></div>
-			<div id='projsTableContainer'  style='border-top: 1px #bbb dashed; border-bottom: 1px #bbb dashed; margin-bottom:8px;'>
+			<div id='projsTableContainer'  style='border-top: 1px #bbb solid; margin-bottom:8px; padding-top:10px;padding-bottom:0px;'>
 				<!-- JS code brings the code from ProjList here -->
 			</div>
 			
-			<div class="addProjDiv">
+			<div class="addProjDiv" style='width: 670px;margin: 0 auto;padding-top:10px;'>
 			<form action="/whatever/" method="POST" id="addProjForm">
 		    	{% csrf_token %}
 				<div class='newProjLabel' style='float:left; margin-left: 10px;'>{{ newProjForm.title }}</div>
