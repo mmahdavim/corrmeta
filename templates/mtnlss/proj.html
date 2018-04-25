@@ -38,15 +38,22 @@
 			<div class='boxInner'>
 				<div id='varsScrollBox'>
 				{% for var in form.instance.variable_set.all %}
-					<span class='varLabel' id='varLabel_{{var.id}}' onClick='selectVar({{var.id}})'>
+					{% if var.isgroup %}
+						<span class='varLabel' id='varLabel_{{var.id}}' title="{{var.description}}" onClick='selectVar({{var.id}})'>
+						<span class='varEditButton' onClick='editVarNameClicked({{var.id}})'><img src='{% static 'images/edit.png' %}' style="width:8px;"></img></span>
+						<input class='varLabeltf varLabelGroup' id='varLabeltf_{{var.id}}' data-initialVal='{{var.name}}' type='textfield' value='{{var.name}}'></input>
+					{% else %}
+						<span class='varLabel' id='varLabel_{{var.id}}' onClick='selectVar({{var.id}})'>
 						<span class='varEditButton' onClick='editVarNameClicked({{var.id}})'><img src='{% static 'images/edit.png' %}' style="width:8px;"></img></span>
 						<input class='varLabeltf' id='varLabeltf_{{var.id}}' data-initialVal='{{var.name}}' type='textfield' value='{{var.name}}'></input>
+					{% endif %}
 					</span>
 				{% endfor %}
 				</div>
 				
 				<div id='varBoxFooter'>
-					<input style='float:right' type='button' value='Delete Selected' onClick='deleteSelectedVars()'></input>
+					<input style='float:right; margin-left:10px;' type='button' value='Delete Selected Variables' onClick='deleteSelectedVars()'></input>
+					<input style='float:right' type='button' value='Create Group Variable from Selected Variables' onClick='addGroupVar()'></input>
 				</div>
 			</div>
 		</div>

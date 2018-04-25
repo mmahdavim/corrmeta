@@ -25,6 +25,9 @@ class Project(models.Model):
 class Variable(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     name = models.CharField(max_length=540)
+    isgroup = models.BooleanField(default=False)
+    variables = models.ManyToManyField("self")    #Only for group variables
+    description = models.CharField(max_length=3000, null=True) #Only for group variables
     def getCorrelation(self,v2,p):
         v1 = self
 #         if sorted([v1.name,v2.name])[0] != v1:

@@ -12,12 +12,12 @@ Papers: <span class='numberLabel'>{{project.paper_set.count}} </span>
 		<div>Variables</div>
 		<div>Sample Size</div>
 	</div>
-	<div id='paperListScrollPane' style='height: 500px; overflow: auto; border: 2px #ccc solid; overflow-y:scroll;'>
+	<div id='paperListScrollPane' style='height: 500px; border: 2px #ccc solid; overflow:scroll; overflow-x:hidden;'>
 		{% for paper in project.paper_set.all %}
 			<div class='paperRow {% if forloop.counter|divisibleby:2 %}evenRow{% else %}oddRow{% endif %}'>
 				<div style='width: 43px'>{{paper.id}}</div>
 				<div style='width: 20px; vertical-align: middle'><input type='checkbox' class='paper_checkbox' id='checkbox_{{paper.id}}'></div>
-				<div style='width: 245px; cursor:pointer' onClick='openPaperFrame({{paper.id}})'><a>{{paper.getMidlengthName}}</a></div>
+				<div style='width: 225px; cursor:pointer' onClick='openPaperFrame({{paper.id}})'><a>{{paper.getMidlengthName}}</a></div>
 				<div>{{paper.year}}</div>
 				<div>{{paper.authors}}</div>
 				<div>{{paper.variables.count}}</div>
@@ -30,7 +30,7 @@ Papers: <span class='numberLabel'>{{project.paper_set.count}} </span>
 	<form action="/alaki/" method="post" id="addPaperForm">
 		{% csrf_token %}
 		<div style='width: 67px'></div>
-		<div style='width: 245px' {% if newPaperForm.title.errors %}class="errorField"{% endif %}>{{newPaperForm.title}}</div>
+		<div style='width: 225px' {% if newPaperForm.title.errors %}class="errorField"{% endif %}>{{newPaperForm.title}}</div>
 		<div {% if newPaperForm.year.errors %}class="errorField"{% endif %}>{{newPaperForm.year}}</div>
 		<div {% if newPaperForm.authors.errors %}class="errorField"{% endif %}>{{newPaperForm.authors}}</div>
 		<div></div>

@@ -18,7 +18,7 @@
 	margin: 0 auto; width: 800px; margin-bottom: 30px;
 }
 .getSigBox{
-	overflow:auto;
+	overflow: hidden;
 	width: 500px;
 	margin: 0 auto;
 	margin-top:10px;
@@ -34,26 +34,28 @@
 }
 
 #sidebar{
-	width: 470px;
+	width: 460px;
 	float:left;
 	margin-left:-68px;
 }
 #mainResultBox{
-	min-width: 630px;
+	width: 630px;
 	float: right;
 	margin-right:-50px;
 }
 #sidebarInside{
 	height: 620px;
-	overflow: scroll;
+	overflow: hidden;
 }
 .sidebarItem{
 	float: left;
-	padding: 5px;
+	padding: 3px;
+	padding-bottom:12px;
 	border: solid 1px gray;
 	border-left: 0px;
 	width: 120px;
 	overflow: auto;
+	overflow-y: hidden;
 	height: 18px;
 	white-space: nowrap;
 }
@@ -65,7 +67,7 @@
 	width: 48px;
 }
 .corValue{
-	width: 35px;
+	width: 47px;
 }
 .pairRow{
 	margin-bottom: 2px;

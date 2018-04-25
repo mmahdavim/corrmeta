@@ -42,11 +42,12 @@
 		<option value="_blank_"></option>
 		<option value="createnew">(Create New...)</option>
 		{% for v in otherProjVars %}
-			<option value="{{v.id}}">{{v.name}}</option>
+			{% if not v.isgroup %}
+				<option value="{{v.id}}">{{v.name}}</option>
+			{% endif %}
 	 	{% endfor %}
 	</select>
 	<input id='saveNewVarButton' type='button' value='Add Variable' onClick='addVariableClicked()'></input>
-	<input id='saveTableButton' type='button' value='Save Changes' onClick='saveCorrelations()'></input>
 	<br>
 	<form id='newVarForm' action="" method="post">
 		{% csrf_token %}

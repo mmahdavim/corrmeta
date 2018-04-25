@@ -1,3 +1,4 @@
+remainingOptions = 1000;
 $(document).ready(function(e) {
 	$('#dropdown1').keyup(function(e) {
 	     if (e.keyCode == 13) {
@@ -17,6 +18,10 @@ $(document).ready(function(e) {
 	    	 addToBox(3);
 	    }
 	});
+	
+	w = 70*$('.corTableHeaderCell').length;
+	w += 150;
+	$('#centerKeeper').css("width",w.toString()+"px");
 	
 	var onSubmitFunc = function(event){
 		event.preventDefault(); //The form wouln't be submitted Yet.
@@ -43,6 +48,11 @@ $(document).ready(function(e) {
 
 
 function addToBox(boxNumber){
+	console.log(remainingOptions);
+	if( remainingOptions<1 ){
+		console.log("no options to add");
+		return;
+	}
 	selectedID = $('#dropdown'+boxNumber+' :selected').val();
 	selectedName = $('#dropdown'+boxNumber+' :selected').html();
 	var newListItem = $("<option class='chosenVar' id='chosenVarOption_box"+boxNumber+"_"+selectedID+"'></option>");
@@ -73,6 +83,7 @@ function removeFromBox(boxNumber){
 }
 
 function refreshOptions(){
+	remainingOptions = 0;
 	$('#dropdown1').empty();
 	$('#dropdown2').empty();
 	$('#dropdown3').empty();
@@ -88,6 +99,7 @@ function refreshOptions(){
 			newListItem2.attr('id',"option_2_"+varid);
 			newListItem3 = newListItem.clone();			//The third one is in a different page (in metaAnalysisFirstPage). But I combined the codes to make it easier.
 			newListItem3.attr('id',"option_3_"+varid);
+			remainingOptions += 1;
 			$('#dropdown1').append(newListItem);
 			$('#dropdown2').append(newListItem2);
 			$('#dropdown3').append(newListItem3);

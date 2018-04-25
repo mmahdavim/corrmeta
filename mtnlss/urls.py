@@ -16,7 +16,8 @@ urlpatterns = [
     url(r'^addquestion/(?P<projID>.+)/$', views.addQuestion),
     url(r'^questionslist/(?P<returnInvalidForm>.+)/(?P<projID>.+)/$', views.questionsList),
     url(r'^deletequestion/(?P<questionID>.+)/$', views.deleteQuestion),
-    url(r'^deletevars/(?P<projID>.+)/$', views.deleteVars), 
+    url(r'^deletevars/(?P<projID>.+)/$', views.deleteVars),
+    url(r'^addgroupvar/(?P<projID>.+)/$', views.addGroupVar), 
     url(r'^editvarname/(?P<projID>.+)/$', views.editVarName),
     url(r'^analysisfirstpage/(?P<projID>.+)/$', views.analysisFirstPage, name='analysisfirstpage'),
     url(r'^analysisresult/(?P<projID>.+)/$', views.analysisResult, name='analysisresult'),
@@ -24,6 +25,7 @@ urlpatterns = [
     url(r'^importfromfile/$', views.importFromFile, name='importfromfile'),
     url(r'^metaanalysisfirstpage/(?P<projID>.+)/$', views.metaAnalysisFirstPage, name='metaanalysisfirstpage'),
     url(r'^metaanalysisresult/(?P<projID>.+)/$', views.metaAnalysisResult, name='metaanalysisresult'),
+    url(r'^metaanalysisresultasfile/(?P<projID>.+)/$', views.metaAnalysisResultAsFile, name='metaanalysisresultasfile'),
     
     url(r'^addNewVariable/(?P<paperID>.+)/$', views.addNewVariable),
     url(r'^addExistingVariable/(?P<paperID>.+)/$', views.addExistingVariable),

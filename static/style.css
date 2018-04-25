@@ -21,7 +21,7 @@ a:hover{
 .boxInner{
 	padding: 15px;
 	padding-top: 0px;
-	overflow: scroll;
+	overflow: auto;
 	display: block;
 }
 

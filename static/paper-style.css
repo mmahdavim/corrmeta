@@ -45,7 +45,7 @@
 	padding-top: 0px;
 	padding-bottom: 0px;
 	max-height: 250px;
-	overflow: scroll;
+	overflow: auto;
 }
 #extQuesAnswersBoxInside p label{
 	font-weight: bold;
@@ -83,7 +83,7 @@
 .corTableCell{
 	-border: 1px solid gray;
 	width: 45px;
-	overflow: hidden;
+	overflow: auto;
 	display: inline-block;
 	height: 35px;
 	-background-color: #eee;
@@ -106,7 +106,7 @@
 	font-size: 14.5px;
 	-border-right: 1px grey dashed;
 	text-align: left;
-	overflow: scroll;
+	overflow: hidden;
 	-border-bottom: 1px solid grey;
 }
 .corTableHeaderCell{

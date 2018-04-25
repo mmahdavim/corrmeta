@@ -34,6 +34,9 @@
 	margin-bottom: 2px;
 	margin-right: 2px;
 }
+.varLabelGroup{
+	font-weight: bold;
+}
 .varLabel:hover{
 	background-color: #ccc;
 }
@@ -183,8 +186,9 @@
 	padding: 0px;
 }
 #varsScrollBox{
-	overflow: scroll;
+	overflow: auto;
 	height: 240px;
+	margin-bottom: 3px;
 }
 .analButtons{
 	-color: #b22;

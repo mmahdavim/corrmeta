@@ -13,49 +13,7 @@ $(document).ready(function(e) {
 	
 	$(document).on('submit', '#paperForm', function(event){
 		event.preventDefault();
-		$.ajax({
-	        url : "../editpaper/"+paperID+'/',
-	        type : "POST", // http method
-	        data : $('#editPaperForm').serialize(), 
-	        success : function(message) {
-				if(message==="Done"){
-					alert("The paper was successfully updated.");
-				}
-				else if(message==="nochange"){
-					alert("No changes were detected.");
-				}
-				else{
-					$('#paperForm').html(message);
-					alert("The changes could not be saved. Please enter valid input values for all fields.");
-				}
-	        },
-	        error : function(xhr,errmsg,err) {
-	            alert("The changes could not be saved. Please enter valid input for all fields.");
-	        }
-	    });
-	});
-	
-	$(document).on('submit', '#editAnswersForm', function(event){
-		event.preventDefault();
-		$.ajax({
-	        url : "../editanswers/"+paperID+'/',
-	        type : "POST", // http method
-	        data : $('#editAnswersForm').serialize(), 
-	        success : function(message) {
-				if(message==="Done"){
-					alert("The answers were successfully updated.");
-				}
-				else if(message==="nochange"){
-					alert("No changes were detected.");
-				}
-				else{
-					alert("The changes could not be saved. Please make sure yout input is valid.");
-				}
-	        },
-	        error : function(xhr,errmsg,err) {
-	            alert("The changes could not be saved. Please make sure yout input is valid.");
-	        }
-	    });
+		
 	});
 	
 	$(document).on('submit', '#newVarForm', function(event){
@@ -294,47 +252,116 @@ function refreshCorTable(){
 }
 
 
-function saveCorrelations(){
-	corData = {}
-	$('.corInput').each(function(){
-		//if the value for it had changed:
-		if($(this).val()!=$(this).attr("data-initial")){
-			//For this correlation, find the IDs of its variables.
-			id = $(this).attr("id");
-			row_col = id.substring(9);
-			underscoreIndex = row_col.indexOf("_");
-			row = row_col.substring(0,underscoreIndex);
-			col = row_col.substring(underscoreIndex+1);
-			id1 = $('#var_'+row).html();
-			id2 = $('#var_'+col).html();
-			cor = $(this).val();
-			myKey = id1+"_"+id2;
-			corData[myKey] = cor;
-		}
+function saveEverything(){
+	feedback = "";
+	
+	//The general paper info part (Paper Information)
+	def = $.ajax({
+        url : "../editpaper/"+paperID+'/',
+        type : "POST", // http method
+        data : $('#editPaperForm').serialize(), 
+        success : function(message) {
+			if(message==="Done"){
+				feedback = "";
+			}
+			else if(message==="nochange"){
+				feedback = message;
+			}
+			else{
+				$('#paperForm').html(message);
+				alert("The changes could not be saved. Please enter valid input values for all fields.");
+				return;
+			}
+        },
+        error : function(xhr,errmsg,err) {
+        	alert("The changes could not be saved. Please enter valid input values for all fields.");
+        	return;
+        }
+    });
+	
+	//The moderator variables part
+	def.then(function(){
+		def2 = $.ajax({
+	        url : "../editanswers/"+paperID+'/',
+	        type : "POST", // http method
+	        data : $('#editAnswersForm').serialize(), 
+	        success : function(message) {
+				if(message==="Done"){
+					feedback = "";
+				}
+				else if(message==="nochange"){
+					if (feedback==="nochange"){
+						//if the previous parts got "no change" too:
+						feedback = "nochange";
+					}
+				}
+				else{
+					alert("The changes could not be saved. Please make sure yout input is valid.");
+					return;
+				}
+	        },
+	        error : function(xhr,errmsg,err) {
+	            alert("The changes could not be saved. Please make sure yout input is valid.");
+	            return;
+	        }
+	    });
+		
+		
+		
+		//The correlation table part:
+		def2.then(function(){
+			corData = {}
+			$('.corInput').each(function(){
+				//if the value for it had changed:
+				if($(this).val()!=$(this).attr("data-initial")){
+					//For this correlation, find the IDs of its variables.
+					id = $(this).attr("id");
+					row_col = id.substring(9);
+					underscoreIndex = row_col.indexOf("_");
+					row = row_col.substring(0,underscoreIndex);
+					col = row_col.substring(underscoreIndex+1);
+					id1 = $('#var_'+row).html();
+					id2 = $('#var_'+col).html();
+					cor = $(this).val();
+					myKey = id1+"_"+id2;
+					corData[myKey] = cor;
+				}
+			});
+			$('.corLikeInput').each(function(){
+				if($(this).val()!=$(this).attr("data-initial")){
+					elementID = $(this).attr("id");
+					underscoreIndex = elementID.indexOf("_");
+					row = elementID.slice(underscoreIndex+1); //The part after the underscore
+					id = $('#var_'+row).html();
+					value = $(this).val();
+					myKey = elementID.slice(12,underscoreIndex)+"_"+id; //e.g. sd_12, mean_3, etc. where the number is the variable id in the DB
+					corData[myKey] = value;
+				}
+			});
+			$.post("../savecorrelations/"+paperID+"/",corData,function(response,status){
+				if(status==="success" && response != "Error" && response != "nochange"){
+					alert("The values were successfully saved.");
+				}
+				else if(response === "nochange"){
+					if (feedback==="nochange"){
+						//if the previous parts got "no change" too:
+						alert("No changes were detected.");
+					}
+					else{
+						alert("The values were successfully saved.");
+					}
+				}
+				else{
+					alert("Something went wrong. Please make sure the values you have entered are valid.");
+					return;
+				}
+			});
+		});
 	});
-	$('.corLikeInput').each(function(){
-		if($(this).val()!=$(this).attr("data-initial")){
-			elementID = $(this).attr("id");
-			underscoreIndex = elementID.indexOf("_");
-			row = elementID.slice(underscoreIndex+1); //The part after the underscore
-			id = $('#var_'+row).html();
-			value = $(this).val();
-			myKey = elementID.slice(12,underscoreIndex)+"_"+id; //e.g. sd_12, mean_3, etc. where the number is the variable id in the DB
-			corData[myKey] = value;
-		}
-	});
-	$.post("../savecorrelations/"+paperID+"/",corData,function(response,status){
-		if(status==="success" && response != "Error" && response != "nochange"){
-			alert("The updated values were successfully saved.");
-		}
-		else if(response === "nochange"){
-			alert("No changes were detected in the values. Nothing was altered in the database.");
-		}
-		else{
-			alert("Something went wrong. Please make sure the values you have entered are valid.");
-		}
-	});
+	
+
 }
+
 
 //////////////////////////////
 function getCookie(name) {

@@ -18,8 +18,31 @@ def addExistingVariableToDB(varID,paperID):
     vp.save()
     return vp
     
-    
-  
+def getGroupName(vars,p):
+    result = ""
+    for v in vars:
+        name = v.name.split()[0]
+        if len(name)>5:
+            name = name[:5]
+        result += name+"-"
+    result = result[:-1]
+    while len(Variable.objects.filter(project=p,name=result))>0:
+        result+="-N"
+    return result
+
+def expandGroupVars(varids):    #Gets a list of variables, and replaces group variables with their members in the list
+    result = []
+    for varid in varids:
+        var = Variable.objects.get(pk=varid)
+        if var.isgroup:
+            for member in var.variables.all():
+                result.append(member.id)
+        else:
+            result.append(varid)
+    result = list(set(result))
+    result = map(lambda x:str(x),result)
+    return result
+
 def getReadableDecimal(value):
     if isinstance(value,Decimal):
         value = "%.4f" % value
@@ -122,7 +145,10 @@ def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2, forM
                 item['var2'] = v2.name
                 pairs.append(item)
                 h_N += c.paper.sample_size if c.paper.sample_size!=None else 0
-                h_FZ = 0.5*math.log((1+c.value)/(1-c.value))
+                try:
+                    h_FZ = 0.5*math.log((1+c.value)/(1-c.value))
+                except:
+                    return  "error","Error: The correlation value betweein \""+c.var1.name+"\" and \""+c.var2.name+"\" in paper "+str(c.paper.id)+" (\""+c.paper.getShortName()+"\") is not valid."           
                 h_SEF = 1/math.sqrt(c.paper.sample_size-3)if c.paper.sample_size!=None else 1
                 h_Z = h_FZ/h_SEF
                 h_AZ = h_FZ/math.sqrt(1*1*1)
@@ -168,7 +194,7 @@ def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2, forM
         results['N'] = h_N
         results['cl_low_rc'] = h_cl_low_rc
         results['cl_high_rc'] = h_cl_high_rc
-        return results
+        return None,results
         
         
     if h_N==0 or h_K<2:
@@ -220,7 +246,6 @@ def getAnalysisResults(theProj, group1varids, group2varids, h_sig1, h_sig2, forM
     h_Q = h_sum_wES2 - h_sum_wES**2/h_sum_w
     h_dr = h_K -1
     h_l2 = (h_Q - (h_K-1))/h_Q
-    print(h_sum_w,h_sum_w2)
     h_T2 = (h_Q - (h_K -1)) / (h_sum_w - h_sum_w2/h_sum_w)
     if  h_Q <= h_K-1:
         h_l2 = 0
@@ -295,7 +320,23 @@ def fillMetaAnalTable(theProj, varids,sig1,sig2):
             if i==j:
                 row.append("1")
                 continue
-            analRes = getAnalysisResults(theProj, [varids[i]], [varids[j]], sig1, sig2, forMeta=True)
+            #Prepare the inputs. It's a little complicated because they might be group variables.
+            varid1 = varids[i]
+            varid2 = varids[j]
+            var1 = Variable.objects.get(pk=varid1)
+            var2 = Variable.objects.get(pk=varid2)
+            if var1.isgroup:
+                inp1 = map(lambda x: x.id, var1.variables.all() )
+            else:
+                inp1 = [varid1]
+            if var2.isgroup:
+                inp2 = map(lambda x: x.id, var2.variables.all() )
+            else:
+                inp2 = [varid2]
+            #Now use the inp1 and inp2:
+            dummy,analRes = getAnalysisResults(theProj, inp1, inp2, sig1, sig2, forMeta=True)
+            if dummy=="error":
+                return analRes
             if j<i:
                 if analRes['rcmean']!=".":
                     row.append('% 6.4g' % analRes['rcmean'])

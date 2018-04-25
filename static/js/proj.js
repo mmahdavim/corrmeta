@@ -240,6 +240,55 @@ function deleteSelectedVars(){
 	});
 }
 
+function addGroupVar(){
+	console.log("in addGroupVar");
+	$.ajax({
+        url : "../addgroupvar/"+$('#proj_id_div').html()+"/",
+        type : "POST", // http method
+        data : selectedVars, 
+        success : function(response) {
+			if (response=="Error"){
+				alert("Something went wrong. The group variable could not be added.");
+			}
+			else{
+				//Get the name and id of the newly added variable
+				spacesIndex = response.indexOf("  ");
+				name = response.substring(0,spacesIndex);
+				id = response.substring(spacesIndex+2);
+				//Now add the new variable to the box
+				codeToAdd = "<span class='varLabel' id='varLabel_"+id+"' onClick='selectVar("+id+")'>";
+				codeToAdd += "<span class='varEditButton' onClick='editVarNameClicked("+id+")'><img src='/static/images/edit.png' style='width:8px;'></img></span>";
+				codeToAdd += "<input class='varLabeltf varLabelGroup' id='varLabeltf_"+id+"' data-initialVal='"+name+"' type='textfield' value='"+name+"'></input>";
+				codeToAdd += "</span>";
+				$("#varsScrollBox").append(codeToAdd);
+				$('#varLabeltf_'+id).prop( "disabled", true );
+			}
+        },
+        error : function(xhr,errmsg,err) {
+        	alert("Something went wrong. The group variable could not be added.");
+        }
+    });
+//	$.post("../addgroupvar/"+$('#proj_id_div').html()+"/",selectedVars,function(response,status){
+//		if(status==="success" && response != "Error"){
+//			//Get the name and id of the newly added variable
+//			spacesIndex = response.indexOf("  ");
+//			name = response.substring(0,spacesIndex);
+//			id = response.substring(spacesIndex+2);
+//			//Now add the new variable to the box
+////			codeToAdd = "<span class='varLabel varLabelGroup' id='varLabel_"+id+"' onClick='selectVar("+id+")'>";
+////			codeToAdd += "<span class='varEditButton' onClick='editVarNameClicked("+id+")'><img src='{% static 'images/edit.png' %}' style='width:8px;'></img></span>";
+////			codeToAdd += "<input class='varLabeltf' id='varLabeltf_"+id+"' data-initialVal='"+name+"' type='textfield' value='"+name+"'></input>";
+////			codeToAdd += "</span>";
+////			$("#varScrollBox").append(codeToAdd);
+//			$("#varScrollBox").append("Hellllllloooooo!");
+//			$("#varScrollBox").show();
+//		}
+//		else{
+//			alert("Something went wrong. The group variable could not be added.");
+//		}
+//	});
+}
+
 function editVarNameClicked(id){
 	//This is to undo the unwanted click effect on the parent div with another dummy click:
 	selectVar(id)

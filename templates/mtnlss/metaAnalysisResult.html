@@ -20,13 +20,36 @@
 	<div style='text-align: center'>
 	<div style='display:inline-block'>
 	<br><br>
+		
+		
+		
+		<form action="/metaanalysisresultasfile/{{project.id}}/" method="POST" id="prepareMetaAnalysisForm"> 
+			{% csrf_token %}
+
+				<div style='margin-top:-80px; visibility:hidden;'>
+					<select name='group1' multiple>
+						{% for g in group1 %}
+							<option value="{{g}}" selected>{{g}}</option>
+						{% endfor %}
+					</select>
+					<input name='sig1' value='{{sig1}}'/>
+					<input name='sig2' value='{{sig2}}'/>
+				</div>
+			<div  style='width: 600px; text-align:left; margin-left: 20px;'><input type='submit' id='finalMetaAnalyzeButton' value='Download As CSV'/></div>
+		</form>
+		
+		
+		
+		
+		
+		
 		<div style='width: 1100px;'>
 			<input type='checkbox' checked id='showSigCheckbox' onClick="clickedShowSigCheckbox()"/><span style='margin-left: 2px; font-size: 15px;'>Show Significance Level</span>
 		</div>
 		<br><br>
-		<div id='centerKeeper' style='margin-left:50px;'>
-			<div class='headerDiv' style='min-width: 4800px;'>
-				<div  class='' style='width: 133px; display:inline-block;float:left'>&nbsp;</div>
+		<div id='centerKeeper' style='margin: 0 auto; display: inline-block;'>
+			<div class='headersDiv'>
+				<div  class='' style='width: 133px; display: inline-block;float:left'>&nbsp;</div>
 				{% for varName in varNames %}
 					<div  class='corTableHeaderCell'  style='margin-right: -25.5px;' id='firstRow_{{forloop.counter}}'>{{varName}}</div>
 				{% endfor %}
@@ -38,7 +61,7 @@
 					<div  class='metaTableCell' style='font-size: 15px; max-width: 120px; min-width:120px; overflow: hidden;' id='firstCol_{{forloop.counter}}'>{{ varNames|index:forloop.counter }}</div>
 					{% for j in i %}
 						{% if forloop.parentloop.counter > forloop.counter %}
-							<div class='metaTableCell' style='font-size: 14px; color: #e66;' id='cell_{{forloop.parentloop.counter}}_{{forloop.counter}}'>{{j}}</div>
+							<div class='metaTableCell' style='font-size: 14px; color: #e66;' id='cell_{{forloop.parentloop.counter}}_{{forloop.counter}}'>{{j|floatformat:-2}}</div>
 						{% else %}
 							<div class='metaTableCell changeableCell' style='font-size: 14px;' id='cell_{{forloop.parentloop.counter}}_{{forloop.counter}}' data-initial="{{j}}">{{j}}</div>
 						{% endif %}
@@ -52,5 +75,12 @@
 	</div>
 	<br><br>
 </div>
+
+<div id='hiddenDivInfo' style='visibility: hidden;'>
+	<div id='group1div'>{{group1}}</div>
+	<div id='sig1div'>{{sig1}}</div>
+	<div id='sig2div'>{{sig2}}</div>
+</div>
+
 {% endblock %}
 

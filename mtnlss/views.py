@@ -181,7 +181,6 @@ def addNewVariable(request,paperID):
         hiddenDiv = getHiddenDivs(request, paperID)
         return HttpResponse(hiddenDiv)
     else:
-        print(varForm)
         return HttpResponse("Error")
     
 @login_required
@@ -254,7 +253,6 @@ def saveCorrelations(request,paperID):
                     [type,varid] = k.split("_")
                     v = Variable.objects.get(pk=varid)
                     varpaper = VarPaper.objects.filter(var=v,paper=p)[0]
-                    print(type,varid)
                     if type=="mean":
                         varpaper.mean = newVal
                     if type=="sd":
@@ -303,7 +301,33 @@ def deleteVars(request,projID):
         return HttpResponse("Done")
     except Exception, e:
         return HttpResponse("Error")
-    
+
+@login_required
+def addGroupVar(request,projID):
+    p = Project.objects.get(pk=projID)
+    try:
+        vars = []
+        for varid in request.POST:
+            var = Variable.objects.get(pk=varid)
+            if var.isgroup:
+                return HttpResponse("Error")
+            vars.append(var)
+        #Now add the new group var:
+        n = getGroupName(vars,p)
+        names = map(lambda x:x.name,vars)
+        d = reduce(lambda x,y: x+", "+y,names)
+        print(map(lambda x: x.name,vars))
+        print(d)
+        newVar = Variable(name=n, project=p, isgroup=True, description=d)
+        newVar.save()
+        for v in vars:
+            newVar.variables.add(v)
+        newVar.save()
+        return HttpResponse(n+"  "+str(newVar.id))
+    except Exception, e:
+        print(e)
+        return HttpResponse("Error")    
+
 @login_required
 def editVarName(request, projID):
     varid = request.POST["id"]
@@ -354,10 +378,18 @@ def analysisFirstPage(request,projID):
 def analysisResult(request, projID):
     theProj = Project.objects.get(pk=projID)
     group1varids = request.POST.getlist('group1')
+    group1varids = expandGroupVars(group1varids)
     group2varids = request.POST.getlist('group2')
+    group2varids = expandGroupVars(group2varids)
+#     print(group1varids)
+#     print(group2varids)
+    if not set(group1varids).isdisjoint(group2varids):
+        return HttpResponse("Error: A group variable is on one side while one of its members is on the other side.")
     sig1 = request.POST['sig1']
     sig2 = request.POST['sig2']
     pairs,results = getAnalysisResults(theProj,group1varids,group2varids,float(sig1)/100,float(sig2)/100)
+    if pairs==None:
+        return HttpResponse(results)        #It's an error message
     
     return render(request,'mtnlss/analysisResult.html', {'project': theProj, 'pairs': pairs, 'results':results})
     
@@ -378,7 +410,6 @@ def exportPapers(request):
     writer = csv.writer(response)
     writer.writerow(['Paper Number', 'Paper Name', 'Authors', 'Year Published', 'Variable A', 'Variable B', 'Var A-Mean', 'Var A-SD', 'Var B-Mean', 'Var B-SD', 'Sample Size', 'Correlation Raw', 'Var A Alpha', 'Var B-Alpha']+question_texts)
     for paperID in paperIDs:
-        print(paperID)
         thePaper = Paper.objects.get(pk=paperID)
         
         #Moderator varialbes (known as questions and answers in the DB):
@@ -395,7 +426,6 @@ def exportPapers(request):
         for var1 in vars:
             for var2 in vars:
                 if var1.id < var2.id:
-                    print(var1,var2)
                     #For every two distinct variables that belong to this paper:
                     varPaper1QS = VarPaper.objects.filter(var=var1,paper=thePaper)
                     if len(varPaper1QS)>0:
@@ -439,6 +469,7 @@ def importFromFile(request):
         proj.admins.add(request.user)
         proj.save()
         counter = 0
+        modVars = []
         for row in readCSV:
 #             g1s = timer()
             for i in range(len(row)):
@@ -448,7 +479,16 @@ def importFromFile(request):
                 except UnicodeError:
                     row[i] = re.sub(r'[^\x00-\x7f]',r' ',x)
             counter += 1
-            if counter<2:
+            if counter==1:
+                colCounter = 13
+                while True:
+                    colCounter += 1
+                    if len(row)>colCounter and row[colCounter] and len(row[colCounter]) > 0:
+                        q = Question(project=proj,text=row[colCounter])
+                        q.save()
+                        modVars.append(q)
+                    else:
+                        break
                 continue
             dflts = {}
             if len(row[2])>0:
@@ -465,6 +505,16 @@ def importFromFile(request):
             if row[1] not in seenPapers:
                 paper,c = Paper.objects.get_or_create(title=row[1], project=proj,defaults=dflts)
                 seenPapers[row[1]] = paper
+                ##Add the modVars for this paper
+                for i in range(len(modVars)):
+                    modVar = modVars[i]
+                    if len(row)>14+i:
+                        value = row[14+i]
+                    else:
+                        value = ""
+                    if value and len(value)>0:
+                        a = Answer(paper=paper,question=modVar,value=value)
+                        a.save()
             else:
                 paper = seenPapers[row[1]]
             
@@ -518,9 +568,12 @@ def importFromFile(request):
         with transaction.atomic():
             for vp,data in vpsToSave.iteritems():
                 vp = addExistingVariableToDB(data[0],data[1])
-                vp.mean = data[2]
-                vp.sd = data[3]
-                vp.alpha = data[4]
+                if data[2]!="":
+                    vp.mean = data[2]
+                if data[3]!="":
+                    vp.sd = data[3]
+                if data[4]!="":
+                    vp.alpha = data[4]
                 vp.save()
             for cor in corsToSave:
                 cor.save()
@@ -533,8 +586,8 @@ def importFromFile(request):
         except:
             pass
         return HttpResponse("Please upload a file with unicode (UTF-8) formatting.")
-    except Exception, e:
-        return HttpResponse("Error parsing file in row "+str(counter)+": "+type(e).__name__+" "+str(e))
+#     except Exception, e:
+#         return HttpResponse("Error parsing file in row "+str(counter)+": "+type(e).__name__+" "+str(e))
     if counter<3:
         proj.delete()
         return HttpResponse("No valid data rows were found on the file.")
@@ -556,10 +609,36 @@ def metaAnalysisResult(request, projID):
     sig1 = request.POST['sig1']
     sig2 = request.POST['sig2']
     results = fillMetaAnalTable(theProj, group1varids,float(sig1)/100,float(sig2)/100)
+    if isinstance(results, basestring):
+                return HttpResponse(results)    #It's an error message
     varNames = []
     for varid in group1varids:
         name = Variable.objects.get(pk=varid).name
         varNames.append(name)
-    return render(request,'mtnlss/metaAnalysisResult.html', {'project': theProj, 'varNames':varNames, 'results':results, 'varCount':range(len(group1varids))})
+    return render(request,'mtnlss/metaAnalysisResult.html', {'project': theProj, 'varNames':varNames, 'results':results, 'varCount':range(len(group1varids)), 'group1':group1varids, 'sig1':sig1, 'sig2':sig2})
     
+@login_required
+def metaAnalysisResultAsFile(request, projID):
+    #This view creates and returns the downloadable file
     
+    #Prepare the data
+    theProj = Project.objects.get(pk=projID)
+    group1varids = request.POST.getlist('group1')
+    sig1 = request.POST['sig1']
+    sig2 = request.POST['sig2']
+    results = fillMetaAnalTable(theProj, group1varids,float(sig1)/100,float(sig2)/100)
+    varNames = []
+    for varid in group1varids:
+        name = Variable.objects.get(pk=varid).name
+        varNames.append(name)
+    
+    #Start writing in the CSV file
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="CorrMeta_MetaAnalysis.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['']+varNames)
+    for i in range(len(varNames)):
+        varName = varNames[i]
+        writer.writerow([varName]+results[i])
+    return response
